@@ -4,8 +4,8 @@ import React from "react";
 import { useRouter } from "next/navigation";
 
 const Category = () => {
+  const router = useRouter();
   const getSubCategoryButtonRender = (category?: string) => {
-    const router = useRouter();
     const onPush = (routes: string) => {
       router.push(`/${routes}`, { scroll: true });
     };

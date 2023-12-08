@@ -1,4 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  //   webpack: (config) => {
+  //     config.module.rules.push({
+  //       test: /\.(scss|css)$/,
+  //       use: ["style-loader", "css-loader"],
+  //     });
+  //     return config;
+  //   },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

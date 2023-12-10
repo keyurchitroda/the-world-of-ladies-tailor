@@ -276,7 +276,10 @@ const Customize = () => {
       <div className="container p-5 ">
         <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
           {products.map((item) => (
-            <div className="border-2	rounded-md	p-2 -bottom-10 hover:bg-gray-800 hover:text-white cursor-pointer">
+            <div
+              key={item.id}
+              className="border-2	rounded-md	p-2 -bottom-10 hover:bg-gray-800 hover:text-white cursor-pointer"
+            >
               <div className="mb-6 lg:mb-0">
                 <img
                   src="https://tecdn.b-cdn.net/img/new/fluid/city/113.webp"

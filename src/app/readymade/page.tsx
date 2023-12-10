@@ -135,32 +135,7 @@ const Readymade = () => {
       price: "$35",
       color: "Black",
     },
-
-    // More products...
   ];
-
-  const getProductButtonRender = (category?: string) => {
-    const addToBag = () => {
-      console.log("add to bag");
-    };
-    return (
-      <div className="w-full h-32 absolute  -bottom-[130px] group-hover:-bottom-5 z-auto duration-700 flex flex-col justify-between p-5">
-        <button
-          onClick={() => addToBag()}
-          className="bg-gray-400 hover:bg-gray-500 text-black font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        >
-          Add to bag
-        </button>
-
-        <button
-          onClick={() => addToBag()}
-          className="bg-gray-400 hover:bg-gray-500 text-black font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-        >
-          View detail
-        </button>
-      </div>
-    );
-  };
 
   return (
     <div className="bg-white">
@@ -171,46 +146,36 @@ const Readymade = () => {
 
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product) => (
-            <div key={product.id} className="group relative">
-              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                {/* <img
-                  src={product.imageSrc}
-                  alt={product.imageAlt}
-                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                /> */}
-
-                <div className="max-w-80 max-h-80 relative overflow-y-hidden  ">
-                  <div className="">
-                    <img
-                      src={product.imageSrc}
-                      alt={product.imageAlt}
-                      className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                    />
-                    {getProductButtonRender()}
+            <section key={product.id} className="mx-auto w-fit">
+              <div className="w-72 h-fit group">
+                <div className="relative overflow-hidden">
+                  <img
+                    className="h-96 w-full object-cover"
+                    src={product.imageSrc}
+                    alt=""
+                  />
+                  <div className="absolute h-full w-full bg-black/20 flex flex-col items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <button
+                      onClick={() => console.log("add to bag")}
+                      className="bg-red-600 text-white py-2 px-5"
+                    >
+                      Add to cart
+                    </button>
+                    <button
+                      onClick={() => console.log("view details")}
+                      className="bg-green-600 text-white py-2 px-5 mt-4"
+                    >
+                      View details
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-sm text-gray-700">
-                    <a href={product.href}>
-                      <span aria-hidden="true" className="absolute inset-0" />
-                      {product.name}
-                    </a>
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                </div>
-                <p className="text-sm font-medium text-gray-900">
+                <h2 className="mt-3 text-xl capitalize">{product.name}</h2>
+                <del className="text-red-700 text-lg">{product.price}</del>
+                <p className="text-xl mt-2 ml-1 inline-block">
                   {product.price}
                 </p>
-                {/* <button
-                  onClick={() => addToBag()}
-                  className="bg-gray-400 hover:bg-gray-500 text-black font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-                >
-                  Add to bag
-                </button> */}
               </div>
-            </div>
+            </section>
           ))}
         </div>
       </div>

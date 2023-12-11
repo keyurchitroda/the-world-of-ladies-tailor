@@ -4,6 +4,9 @@ import React, { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { getCookie, removeCookie } from "@/apiConfig/cookies";
+import { defaultTokenString } from "@/helpers/helper";
+import { useRouter } from "next/navigation";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -17,6 +20,19 @@ function classNames(...classes: any) {
 }
 
 const Navbar = () => {
+  const router = useRouter();
+
+  const onSignOut = async () => {
+    await removeCookie(defaultTokenString);
+    router.push("/signin");
+  };
+
+  const isTokenAvailable = () => {
+    const tokenVal: any = getCookie("token");
+    console.log("token", tokenVal);
+    return tokenVal ? true : false;
+  };
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -124,15 +140,29 @@ const Navbar = () => {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
+                          <>
+                            {isTokenAvailable() ? (
+                              <p
+                                onClick={onSignOut}
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                                )}
+                              >
+                                Sign out
+                              </p>
+                            ) : (
+                              <Link
+                                href="/signin"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                                )}
+                              >
+                                Sign in
+                              </Link>
                             )}
-                          >
-                            Sign out
-                          </a>
+                          </>
                         )}
                       </Menu.Item>
                     </Menu.Items>

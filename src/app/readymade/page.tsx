@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const Readymade = () => {
   const products = [
@@ -137,6 +138,13 @@ const Readymade = () => {
     },
   ];
 
+  const router = useRouter();
+
+  const viewProductDetailsNavigate = () => {
+    console.log("click");
+    router.push("/readymade/productdetail");
+  };
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
@@ -162,7 +170,7 @@ const Readymade = () => {
                       Add to cart
                     </button>
                     <button
-                      onClick={() => console.log("view details")}
+                      onClick={() => viewProductDetailsNavigate()}
                       className="bg-green-600 text-white py-2 px-5 mt-4"
                     >
                       View details

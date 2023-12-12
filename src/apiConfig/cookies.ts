@@ -1,3 +1,5 @@
+"use client";
+
 import Cookies from "js-cookie";
 
 export const setCookie = (name: string, token: string, expireTime: any) => {

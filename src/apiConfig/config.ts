@@ -1,11 +1,16 @@
 "use client";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface configType {
   API_URL: string;
 }
 // Switches between different environments
 const configSwitcher = (environmentType: string) => {
-  let configuration: configType;
+  // const pathname = usePathname();
+  // const searchParams = useSearchParams();
+
+  console.log("window.location.hostname>>>>", window.location.hostname);
+  let configuration;
 
   switch (environmentType) {
     case "localhost":
@@ -24,4 +29,8 @@ const configSwitcher = (environmentType: string) => {
 };
 
 // Just change the string to 'local', 'sandbox', 'staging' or 'prod' to switch between different environments.
-export const config = configSwitcher(window.location.hostname);
+// export const config = configSwitcher(window.location.hostname);
+export const config =
+  typeof window !== "undefined"
+    ? configSwitcher(window.location.hostname)
+    : { API_URL: "" };

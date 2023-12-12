@@ -1,3 +1,5 @@
+"use client";
+
 /* This instance of Axios will be used for those APIs which doesn't require authorization */
 import axios from "axios";
 import { config } from "./config";

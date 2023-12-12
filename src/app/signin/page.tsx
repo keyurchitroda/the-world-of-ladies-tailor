@@ -149,7 +149,7 @@ const Signin = () => {
 
                   <div className="mt-6 text-center ">
                     <Link
-                      href="/signin"
+                      href="/signup"
                       className="text-sm text-blue-500 hover:underline dark:text-blue-400"
                     >
                       Create new account?

@@ -7,3 +7,7 @@ export const signinService = (data: any) => {
 export const signupService = (data: any) => {
   return gauestAxiosInstance.post("users/signup", data);
 };
+
+export const signoutService = () => {
+  return gauestAxiosInstance.get("users/logout");
+};

@@ -7,6 +7,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { setCookie } from "@/apiConfig/cookies";
+import { defaultAuthTokenString } from "@/helpers/helper";
 
 interface initialValues {
   email: string;
@@ -38,13 +40,16 @@ const Signin = () => {
         password,
       };
       const response: any = await signinService(reqBody);
+      console.log("response", response);
       if (response.success === true) {
         toast.success(response.message);
+        await setCookie(defaultAuthTokenString, response.data.token);
         router.push("/");
       } else {
         toast.success(response.error);
       }
     } catch (error: any) {
+      console.log("error", error);
       toast.error(error.message.error);
     }
   };

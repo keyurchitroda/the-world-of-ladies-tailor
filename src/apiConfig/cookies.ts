@@ -2,7 +2,7 @@
 
 import Cookies from "js-cookie";
 
-export const setCookie = (name: string, token: string, expireTime: any) => {
+export const setCookie = (name: string, token: string, expireTime?: any) => {
   Cookies.set(name, token, { expires: expireTime });
 };
 

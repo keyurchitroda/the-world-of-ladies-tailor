@@ -5,8 +5,9 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { getCookie, removeCookie } from "@/apiConfig/cookies";
-import { defaultTokenString } from "@/helpers/helper";
+import { defaultAuthTokenString, defaultTokenString } from "@/helpers/helper";
 import { useRouter } from "next/navigation";
+import { signoutService } from "@/services/authService";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -23,13 +24,13 @@ const Navbar = () => {
   const router = useRouter();
 
   const onSignOut = async () => {
-    await removeCookie(defaultTokenString);
+    await signoutService();
+    await removeCookie(defaultAuthTokenString);
     router.push("/signin");
   };
 
   const isTokenAvailable = () => {
-    const tokenVal: any = getCookie("token");
-    console.log("token", tokenVal);
+    const tokenVal: any = getCookie("authToken");
     return tokenVal ? true : false;
   };
 

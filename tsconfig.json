@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/apiConfig/config.js",
-    "src/apiConfig/config.js"
+    "src/apiConfig/config.js",
+    "./node_modules/redux-persist/types"
   ],
   "exclude": ["node_modules"]
 }

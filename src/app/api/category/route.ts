@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 }
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
     await newCat.save();
     const byteData = await categoryImage.arrayBuffer();
     const buffer = Buffer.from(byteData);
-    const path = `./public/${categoryImage.name}`;
+    const path = `./public/category/${categoryImage.name}`;
     await writeFile(path, buffer);
     return NextResponse.json(
       {

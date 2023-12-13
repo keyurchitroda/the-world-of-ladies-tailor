@@ -1,32 +1,27 @@
 "use client";
-import { usePathname, useSearchParams } from "next/navigation";
 
-interface configType {
-  API_URL: string;
-}
 // Switches between different environments
 const configSwitcher = (environmentType: string) => {
-  // const pathname = usePathname();
-  // const searchParams = useSearchParams();
-
-  console.log("window.location.hostname>>>>", window.location.hostname);
   let configuration;
 
   switch (environmentType) {
     case "localhost":
       configuration = {
         API_URL: `http://localhost:3000/api/`,
+        ImageUrl: `http://localhost:3000`,
       };
       break;
     case "tailor05.vercel.app":
       configuration = {
         API_URL: `https://tailor05.vercel.app/api/`,
+        ImageUrl: `http://localhost:3000`,
       };
       break;
     default:
       configuration = {
         /* Default Local Config */
         API_URL: `http://localhost:3000/api/`,
+        ImageUrl: `http://localhost:3000`,
       };
   }
 
@@ -38,4 +33,4 @@ const configSwitcher = (environmentType: string) => {
 export const config =
   typeof window !== "undefined"
     ? configSwitcher(window.location.hostname)
-    : { API_URL: "" };
+    : { API_URL: "", ImageUrl: "" };

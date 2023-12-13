@@ -1,10 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCategory } from "@/redux/slices/categorySlice";
+import { AppDispatch } from "@/redux/store";
+import _ from "lodash";
+import { config } from "@/apiConfig/config";
 
 const Category = () => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const categories = useSelector(
+    (state: any) => state.categoryReducer.categories
+  );
+  useEffect(() => {
+    getCategoryList();
+  }, [dispatch]);
+
+  const getCategoryList = async () => {
+    await dispatch(getAllCategory());
+  };
+
   const getSubCategoryButtonRender = (category?: string) => {
     const onPush = (routes: string) => {
       router.push(`/${routes}`, { scroll: true });
@@ -30,58 +47,22 @@ const Category = () => {
   return (
     <div className="container p-6">
       <div className="grid gap-12 md:grid-cols-3 sm:grid-cols-6">
-        <div className="mb-6 lg:mb-0 w-full relative group">
-          <p className="text-start font-bold text-lg">Category 1</p>
-          <div className="max-w-80 max-h-80 relative overflow-y-hidden  ">
-            <div className="hover:opacity-60">
-              <img
-                className="w-full h-full "
-                src="https://tecdn.b-cdn.net/img/new/fluid/city/113.webp"
-              />
+        {_.map(categories, (item) => (
+          <div className="mb-6 lg:mb-0 w-full relative group">
+            <p className="text-start font-bold text-lg">
+              {_.get(item, "category_name", "")}
+            </p>
+            <div className="max-w-80 max-h-80 relative overflow-y-hidden  ">
+              <div className="hover:opacity-60">
+                <img
+                  className="w-full h-full "
+                  src={`${config.ImageUrl}/category/${item.category_image}`}
+                />
+              </div>
+              {getSubCategoryButtonRender()}
             </div>
-            {getSubCategoryButtonRender()}
           </div>
-        </div>
-        <div className="mb-6 lg:mb-0 w-full relative group">
-          <p className="text-start font-bold text-lg">Category 2</p>
-          <div className="max-w-80 max-h-80 relative overflow-y-hidden ">
-            <div>
-              <img
-                src="https://tecdn.b-cdn.net/img/new/fluid/city/111.webp"
-                className="w-full rounded-md shadow-lg"
-              />
-            </div>
-            {getSubCategoryButtonRender()}
-          </div>
-        </div>
-        <div className="mb-6 lg:mb-0">
-          <p className="text-start font-bold text-lg">Category 3</p>
-          <img
-            src="https://tecdn.b-cdn.net/img/new/fluid/city/112.webp"
-            className="w-full rounded-md shadow-lg"
-          />
-        </div>
-        <div className="mb-6 lg:mb-0">
-          <p className="text-start font-bold text-lg">Category 4</p>
-          <img
-            src="https://tecdn.b-cdn.net/img/new/fluid/city/114.webp"
-            className="w-full rounded-md shadow-lg"
-          />
-        </div>
-        <div className="mb-6 lg:mb-0">
-          <p className="text-start font-bold text-lg">Category 5</p>
-          <img
-            src="https://tecdn.b-cdn.net/img/new/fluid/city/115.webp"
-            className="w-full rounded-md shadow-lg"
-          />
-        </div>
-        <div className="mb-6 lg:mb-0">
-          <p className="text-start font-bold text-lg">Category 6</p>
-          <img
-            src="https://tecdn.b-cdn.net/img/new/fluid/city/116.webp"
-            className="w-full rounded-md shadow-lg"
-          />
-        </div>
+        ))}
       </div>
     </div>
   );

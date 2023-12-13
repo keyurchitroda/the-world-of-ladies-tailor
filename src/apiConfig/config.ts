@@ -18,9 +18,9 @@ const configSwitcher = (environmentType: string) => {
         API_URL: `http://localhost:3000/api/`,
       };
       break;
-    case "the-world-of-ladies-tailor.vercel.app":
+    case "tailor05.vercel.app":
       configuration = {
-        API_URL: `https://the-world-of-ladies-tailor.vercel.app/api/`,
+        API_URL: `https:/tailor05.vercel.app/api/`,
       };
       break;
     default:

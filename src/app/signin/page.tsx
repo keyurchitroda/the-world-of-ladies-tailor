@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString } from "@/helpers/helper";
-import { Watch } from "react-loader-spinner";
+// import { Watch } from "react-loader-spinner";
 
 interface initialValues {
   email: string;
@@ -156,7 +156,7 @@ const Signin = () => {
                     className="flex justify-center align-middle w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                     disabled={loader}
                   >
-                    {loader ? (
+                    {/* {loader ? (
                       <Watch
                         height="20"
                         width="20"
@@ -171,7 +171,25 @@ const Signin = () => {
                         visible={true}
                       />
                     ) : null}
-                    <span className="ms-50">Sign in</span>
+                    <span className="ms-50">Sign in</span> */}
+                    {loader ? (
+                      // <Watch
+                      //   height="20"
+                      //   width="20"
+                      //   radius="48"
+                      //   color="#FFFFFF"
+                      //   ariaLabel="watch-loading"
+                      //   wrapperStyle={{
+                      //     paddingRight: "10px",
+                      //     fontWeight: "bold",
+                      //   }}
+                      //   wrapperClassName="text-white"
+                      //   visible={true}
+                      // />
+                      <span className="ms-50">Loading</span>
+                    ) : (
+                      <span className="ms-50">Sign in</span>
+                    )}
                   </button>
 
                   <div className="mt-6 text-center ">

@@ -7,7 +7,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Watch } from "react-loader-spinner";
+// import { Watch } from "react-loader-spinner";
 
 interface initialValues {
   username: string;
@@ -232,21 +232,23 @@ const Signup = () => {
                     disabled={loader}
                   >
                     {loader ? (
-                      <Watch
-                        height="20"
-                        width="20"
-                        radius="48"
-                        color="#FFFFFF"
-                        ariaLabel="watch-loading"
-                        wrapperStyle={{
-                          paddingRight: "10px",
-                          fontWeight: "bold",
-                        }}
-                        wrapperClassName="text-white"
-                        visible={true}
-                      />
-                    ) : null}
-                    <span className="ms-50">Sign in</span>
+                      // <Watch
+                      //   height="20"
+                      //   width="20"
+                      //   radius="48"
+                      //   color="#FFFFFF"
+                      //   ariaLabel="watch-loading"
+                      //   wrapperStyle={{
+                      //     paddingRight: "10px",
+                      //     fontWeight: "bold",
+                      //   }}
+                      //   wrapperClassName="text-white"
+                      //   visible={true}
+                      // />
+                      <span className="ms-50">Loading</span>
+                    ) : (
+                      <span className="ms-50">Sign up</span>
+                    )}
                   </button>
 
                   <div className="mt-6 text-center ">

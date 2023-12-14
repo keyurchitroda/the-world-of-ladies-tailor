@@ -36,9 +36,8 @@ export default categroySlice.reducer;
 export const getAllCategory = () => async (dispatch: AppDispatch) => {
   try {
     let response: any = await getAllCategoryService();
-    console.log("response", response);
     if (response.success === true) {
-      dispatch(getAllCategorySuccess(response.data));
+      await dispatch(getAllCategorySuccess(response.data));
     }
   } catch (e: any) {
     if (e.code === 500) {

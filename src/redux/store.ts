@@ -14,16 +14,18 @@ import {
 import { combineReducers } from "redux";
 import storage from "redux-persist/lib/storage";
 import categoryReducer from "./slices/categorySlice";
+import readymadeProductReducer from "./slices/readymadeProductSlice";
 
 const reducers = combineReducers({
   categoryReducer,
+  readymadeProductReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
   whitelist: [""], // only these reducers will be persisted
-  blacklist: ["categoryReducer"],
+  blacklist: ["categoryReducer", "readymadeProductReducer"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

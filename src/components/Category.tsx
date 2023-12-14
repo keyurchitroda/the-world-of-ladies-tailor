@@ -22,20 +22,20 @@ const Category = () => {
     await dispatch(getAllCategory());
   };
 
-  const getSubCategoryButtonRender = (category?: string) => {
-    const onPush = (routes: string) => {
-      router.push(`/${routes}`, { scroll: true });
+  const getSubCategoryButtonRender = (category_id: string) => {
+    const onPush = (routes: string, catid: string) => {
+      router.push(`/${routes}/${catid}`, { scroll: true });
     };
     return (
       <div className="w-full h-32 absolute  -bottom-[130px] group-hover:bottom-20 z-auto duration-700 flex flex-col justify-between p-5">
         <button
-          onClick={() => onPush("readymade")}
+          onClick={() => onPush("readymade", category_id)}
           className="bg-green-700 hover:bg-green-500 text-white font-semibold py-2 px-4 border border-green-400 rounded shadow"
         >
           Readymade
         </button>
         <button
-          onClick={() => onPush("customize")}
+          onClick={() => onPush("customize", category_id)}
           className="bg-sky-700 hover:bg-sky-500  text-white font-semibold py-2 px-4 border border-sky-400 rounded shadow"
         >
           Customize
@@ -56,10 +56,14 @@ const Category = () => {
               <div className="hover:opacity-60">
                 <img
                   className="w-full h-full "
-                  src={`${config.ImageUrl}/category/${item.category_image}`}
+                  src={`${config.ImageUrl}/category/${_.get(
+                    item,
+                    "category_image",
+                    ""
+                  )}`}
                 />
               </div>
-              {getSubCategoryButtonRender()}
+              {getSubCategoryButtonRender(_.get(item, "_id", ""))}
             </div>
           </div>
         ))}

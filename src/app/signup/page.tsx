@@ -2,11 +2,12 @@
 
 import { signupService } from "@/services/authService";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { Watch } from "react-loader-spinner";
 
 interface initialValues {
   username: string;
@@ -22,6 +23,7 @@ interface signupResponse {
 
 const Signup = () => {
   const router = useRouter();
+  const [loader, setLoader] = useState(false);
 
   const initialValue: initialValues = {
     username: "",
@@ -48,6 +50,7 @@ const Signup = () => {
 
   const onSignUp = async (values: any) => {
     try {
+      setLoader(true);
       const { email, password, username } = values;
       const reqBody = {
         email,
@@ -57,11 +60,14 @@ const Signup = () => {
       const response: any = await signupService(reqBody);
       if (response.success === true) {
         toast.success(response.message);
+        setLoader(false);
         router.push("/signin");
       } else {
+        setLoader(false);
         toast.success(response.error);
       }
     } catch (error: any) {
+      setLoader(false);
       toast.error(error.message.error);
     }
   };
@@ -222,10 +228,25 @@ const Signup = () => {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-                    disabled={isSubmitting}
+                    className="flex justify-center align-middle  w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                    disabled={loader}
                   >
-                    Sign Up
+                    {loader ? (
+                      <Watch
+                        height="20"
+                        width="20"
+                        radius="48"
+                        color="#FFFFFF"
+                        ariaLabel="watch-loading"
+                        wrapperStyle={{
+                          paddingRight: "10px",
+                          fontWeight: "bold",
+                        }}
+                        wrapperClassName="text-white"
+                        visible={true}
+                      />
+                    ) : null}
+                    <span className="ms-50">Sign in</span>
                   </button>
 
                   <div className="mt-6 text-center ">

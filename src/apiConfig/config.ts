@@ -14,7 +14,7 @@ const configSwitcher = (environmentType: string) => {
     case "tailor05.vercel.app":
       configuration = {
         API_URL: `https://tailor05.vercel.app/api/`,
-        ImageUrl: `http://localhost:3000`,
+        ImageUrl: `https://tailor05.vercel.app`,
       };
       break;
     default:

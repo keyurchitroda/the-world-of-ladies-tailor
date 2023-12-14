@@ -2,13 +2,14 @@
 
 import { signinService } from "@/services/authService";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { setCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString } from "@/helpers/helper";
+import { Watch } from "react-loader-spinner";
 
 interface initialValues {
   email: string;
@@ -17,6 +18,8 @@ interface initialValues {
 
 const Signin = () => {
   const router = useRouter();
+
+  const [loader, setLoader] = useState(false);
 
   const initialValue: initialValues = {
     email: "",
@@ -34,6 +37,7 @@ const Signin = () => {
 
   const onSignIn = async (values: any) => {
     try {
+      setLoader(true);
       const { email, password, username } = values;
       const reqBody = {
         email,
@@ -44,12 +48,15 @@ const Signin = () => {
       if (response.success === true) {
         toast.success(response.message);
         await setCookie(defaultAuthTokenString, response.data.token);
+        setLoader(false);
         router.push("/");
       } else {
+        setLoader(false);
         toast.success(response.error);
       }
     } catch (error: any) {
       console.log("error", error);
+      setLoader(false);
       toast.error(error.message.error);
     }
   };
@@ -146,10 +153,25 @@ const Signin = () => {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-                    disabled={isSubmitting}
+                    className="flex justify-center align-middle w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                    disabled={loader}
                   >
-                    Sign In
+                    {loader ? (
+                      <Watch
+                        height="20"
+                        width="20"
+                        radius="48"
+                        color="#FFFFFF"
+                        ariaLabel="watch-loading"
+                        wrapperStyle={{
+                          paddingRight: "10px",
+                          fontWeight: "bold",
+                        }}
+                        wrapperClassName="text-white"
+                        visible={true}
+                      />
+                    ) : null}
+                    <span className="ms-50">Sign in</span>
                   </button>
 
                   <div className="mt-6 text-center ">

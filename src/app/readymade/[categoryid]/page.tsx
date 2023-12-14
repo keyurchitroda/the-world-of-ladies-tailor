@@ -1,6 +1,6 @@
 "use client";
 
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/redux/store";

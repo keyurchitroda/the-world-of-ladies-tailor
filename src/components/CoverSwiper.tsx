@@ -22,6 +22,9 @@ const CoverSwiper = () => {
       autoplay={true}
     >
       <SwiperSlide>
+        <img src="/coverfinal.jpg" className="object-cover h-48 w-96" />
+      </SwiperSlide>
+      <SwiperSlide>
         <img src="/cover1.jpg" className="object-cover h-48 w-96" />
       </SwiperSlide>
       <SwiperSlide>

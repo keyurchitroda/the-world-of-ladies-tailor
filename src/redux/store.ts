@@ -15,10 +15,12 @@ import { combineReducers } from "redux";
 import storage from "redux-persist/lib/storage";
 import categoryReducer from "./slices/categorySlice";
 import readymadeProductReducer from "./slices/readymadeProductSlice";
+import customizeReducer from "./slices/customizeSlice";
 
 const reducers = combineReducers({
   categoryReducer,
   readymadeProductReducer,
+  customizeReducer,
 });
 
 const persistConfig = {

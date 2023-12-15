@@ -3,7 +3,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
 import { getAllCategoryService } from "@/services/categoryService";
-// import { setIsLoaderFalse, setIsLoaderTrue } from "./commonSlice";
+import { setIsLoaderFalse, setIsLoaderTrue } from "./commonSlice";
 
 interface Category {
   _id: string;
@@ -35,11 +35,14 @@ export default categroySlice.reducer;
 
 export const getAllCategory = () => async (dispatch: AppDispatch) => {
   try {
+    await dispatch(setIsLoaderTrue());
     let response: any = await getAllCategoryService();
     if (response.success === true) {
       await dispatch(getAllCategorySuccess(response.data));
     }
+    await dispatch(setIsLoaderFalse());
   } catch (e: any) {
+    await dispatch(setIsLoaderFalse());
     if (e.code === 500) {
       console.log("error,", e);
     }

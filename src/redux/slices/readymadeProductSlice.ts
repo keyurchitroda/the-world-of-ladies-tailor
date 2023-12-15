@@ -2,10 +2,9 @@
 
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
-import { getAllCategoryService } from "@/services/categoryService";
 import { getAllReadymadeProductService } from "@/services/readymadeProductService";
 import _ from "lodash";
-// import { setIsLoaderFalse, setIsLoaderTrue } from "./commonSlice";
+import { setIsLoaderFalse, setIsLoaderTrue } from "./commonSlice";
 
 interface ReadyMadeProductInterface {
   _id: string;
@@ -52,12 +51,15 @@ export default readymadeProductSlice.reducer;
 export const getAllReadymadeProduct =
   (categoryId: string) => async (dispatch: AppDispatch) => {
     try {
+      await dispatch(setIsLoaderTrue());
       let response: any = await getAllReadymadeProductService(categoryId);
       console.log("response", response);
       if (response.success === true) {
         dispatch(getAllReadymadeProductSuccess(_.get(response, "data", [])));
       }
+      await dispatch(setIsLoaderFalse());
     } catch (e: any) {
+      await dispatch(setIsLoaderFalse());
       if (e.code === 500) {
         console.log("error,", e);
       }

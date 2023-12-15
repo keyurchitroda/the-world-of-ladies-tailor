@@ -16,18 +16,25 @@ import storage from "redux-persist/lib/storage";
 import categoryReducer from "./slices/categorySlice";
 import readymadeProductReducer from "./slices/readymadeProductSlice";
 import customizeReducer from "./slices/customizeSlice";
+import commonReducer from "./slices/commonSlice";
 
 const reducers = combineReducers({
   categoryReducer,
   readymadeProductReducer,
   customizeReducer,
+  commonReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
   whitelist: [""], // only these reducers will be persisted
-  blacklist: ["categoryReducer", "readymadeProductReducer"],
+  blacklist: [
+    "categoryReducer",
+    "readymadeProductReducer",
+    "customizeReducer",
+    "commonReducer",
+  ],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

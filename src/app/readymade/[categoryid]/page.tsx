@@ -7,6 +7,7 @@ import { AppDispatch } from "@/redux/store";
 import { getAllReadymadeProduct } from "@/redux/slices/readymadeProductSlice";
 import { config } from "@/apiConfig/config";
 import _ from "lodash";
+import { ClockLoader } from "react-spinners";
 
 interface PropsParams {
   params: {
@@ -37,6 +38,10 @@ const Readymade = (props: PropsParams) => {
     (state: any) => state.readymadeProductReducer.products
   );
 
+  const isLoading = useSelector(
+    (state: any) => state.commonReducer.UIGlobalLoader
+  );
+
   useEffect(() => {
     if (_.get(props, "params.categoryid", "")) {
       getReadymadeProductList();
@@ -61,7 +66,14 @@ const Readymade = (props: PropsParams) => {
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           Customers also purchased
         </h2>
-
+        <div className="text-center flex justify-center mt-28">
+          <ClockLoader
+            speedMultiplier={10}
+            color="black"
+            loading={isLoading}
+            size={100}
+          />
+        </div>
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product: ReadyMadeProductInterface) => (
             <section key={product._id} className="mx-auto w-fit border">

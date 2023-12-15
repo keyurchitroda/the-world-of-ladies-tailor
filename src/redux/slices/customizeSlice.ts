@@ -7,6 +7,7 @@ import {
   getAllCustomizeCategoryService,
   getAllCustomizeProductService,
 } from "@/services/customizeService";
+import { setIsLoaderFalse, setIsLoaderTrue } from "./commonSlice";
 
 interface CustomizeCategoryInterface {
   _id: string;
@@ -90,6 +91,7 @@ export default customizeSlice.reducer;
 export const getAllCustomizeCategory =
   (categoryId: string) => async (dispatch: AppDispatch) => {
     try {
+      await dispatch(setIsLoaderTrue());
       let response: any = await getAllCustomizeCategoryService(categoryId);
       console.log("response", response);
       if (response.success === true) {
@@ -101,7 +103,9 @@ export const getAllCustomizeCategory =
         );
         await dispatch(setCurrentCustomizeCategorySuccess(0));
       }
+      await dispatch(setIsLoaderFalse());
     } catch (e: any) {
+      await dispatch(setIsLoaderFalse());
       if (e.code === 500) {
         console.log("error,", e);
       }
@@ -122,6 +126,7 @@ export const netxCategoryStep =
 export const getAllCustomizeProduct =
   (categoryId: string) => async (dispatch: AppDispatch) => {
     try {
+      await dispatch(setIsLoaderTrue());
       let response: any = await getAllCustomizeProductService(categoryId);
       console.log("response", response);
       if (response.success === true) {
@@ -129,7 +134,9 @@ export const getAllCustomizeProduct =
           getAllCustomizeProductSuccess(_.get(response, "data", []))
         );
       }
+      await dispatch(setIsLoaderFalse());
     } catch (e: any) {
+      await dispatch(setIsLoaderFalse());
       if (e.code === 500) {
         console.log("error,", e);
       }

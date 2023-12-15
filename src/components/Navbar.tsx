@@ -2,12 +2,19 @@
 
 import React, { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  BellIcon,
+  XMarkIcon,
+  ShoppingCartIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { getCookie, removeCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString, defaultTokenString } from "@/helpers/helper";
 import { useRouter } from "next/navigation";
 import { signoutService } from "@/services/authService";
+import { useDispatch } from "react-redux";
+import { setAddToCartValue } from "@/redux/slices/commonSlice";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -22,6 +29,7 @@ function classNames(...classes: any) {
 
 const Navbar = () => {
   const router = useRouter();
+  const dispatch = useDispatch<any>();
 
   const onSignOut = async () => {
     await signoutService();
@@ -32,6 +40,10 @@ const Navbar = () => {
   const isTokenAvailable = () => {
     const tokenVal: any = getCookie("authToken");
     return tokenVal ? true : false;
+  };
+
+  const handleOpenCart = async () => {
+    await dispatch(setAddToCartValue(true));
   };
 
   return (
@@ -84,10 +96,11 @@ const Navbar = () => {
                 <button
                   type="button"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  onClick={handleOpenCart}
                 >
                   <span className="absolute -inset-1.5" />
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
+                  <span className="sr-only">Shopping Cart</span>
+                  <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
 
                 {/* Profile dropdown */}

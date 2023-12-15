@@ -48,12 +48,14 @@ interface CustomizeCategoryState {
   categories: CustomizeCategoryInterface[];
   current_category: number;
   products: CustomizeProductInterface[];
+  selectedProducts: CustomizeProductInterface[];
 }
 
 const initialState: CustomizeCategoryState = {
   categories: [],
   products: [],
   current_category: 0,
+  selectedProducts: [],
 };
 
 export const customizeSlice: any = createSlice({
@@ -78,6 +80,25 @@ export const customizeSlice: any = createSlice({
     ) => {
       state.products = action.payload;
     },
+    setSelectCustimizeProductSuccess: (
+      state,
+      action: PayloadAction<CustomizeProductInterface[]>
+    ) => {
+      const existingProductIndex = state.selectedProducts.findIndex(
+        (item) =>
+          item.customize_category_id._id ===
+          action.payload[0].customize_category_id._id
+      );
+      if (existingProductIndex !== -1) {
+        state.selectedProducts.splice(
+          existingProductIndex,
+          1,
+          ...action.payload
+        );
+      } else {
+        state.selectedProducts.push(...action.payload);
+      }
+    },
   },
 });
 
@@ -85,6 +106,7 @@ const {
   getAllCustomizeCategorySuccess,
   setCurrentCustomizeCategorySuccess,
   getAllCustomizeProductSuccess,
+  setSelectCustimizeProductSuccess,
 } = customizeSlice.actions;
 export default customizeSlice.reducer;
 
@@ -137,6 +159,18 @@ export const getAllCustomizeProduct =
       await dispatch(setIsLoaderFalse());
     } catch (e: any) {
       await dispatch(setIsLoaderFalse());
+      if (e.code === 500) {
+        console.log("error,", e);
+      }
+    }
+  };
+
+export const selectCustomizeProduct =
+  (product: any) => async (dispatch: AppDispatch) => {
+    console.log("product", product);
+    try {
+      await dispatch(setSelectCustimizeProductSuccess([product]));
+    } catch (e: any) {
       if (e.code === 500) {
         console.log("error,", e);
       }

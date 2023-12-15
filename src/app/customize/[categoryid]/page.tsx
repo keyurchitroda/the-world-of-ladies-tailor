@@ -5,6 +5,7 @@ import {
   getAllCustomizeCategory,
   getAllCustomizeProduct,
   netxCategoryStep,
+  selectCustomizeProduct,
 } from "@/redux/slices/customizeSlice";
 import { AppDispatch } from "@/redux/store";
 import _ from "lodash";
@@ -31,6 +32,9 @@ const Customize = (props: PropsParams) => {
   );
 
   const products = useSelector((state: any) => state.customizeReducer.products);
+  const selectedProducts = useSelector(
+    (state: any) => state.customizeReducer.selectedProducts
+  );
   const isLoading = useSelector(
     (state: any) => state.commonReducer.UIGlobalLoader
   );
@@ -69,6 +73,20 @@ const Customize = (props: PropsParams) => {
     } else {
       console.log("Start of steps reached");
     }
+  };
+
+  const handleProductSelection = async (item: any) => {
+    await dispatch(selectCustomizeProduct(item));
+  };
+
+  const isProductSelcted = (item: any) => {
+    const isSelected = _.some(
+      selectedProducts,
+      (product) =>
+        product._id === item._id &&
+        product.category_id._id === item.category_id._id
+    );
+    return isSelected;
   };
 
   return (
@@ -118,10 +136,16 @@ const Customize = (props: PropsParams) => {
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {_.map(products, (item) => (
+            {_.map(products, (item, index) => (
               <div
                 key={_.get(item, "_id", "")}
-                className="border-2	rounded-md	p-2 -bottom-10 hover:bg-gray-800 hover:text-white cursor-pointer"
+                // className="border-2	rounded-md	p-2 -bottom-10 hover:bg-gray-800 hover:text-white cursor-pointer"
+                className={`border-2 rounded-md p-2 ${
+                  isProductSelcted(item)
+                    ? "bg-gray-800 text-white"
+                    : "hover:bg-gray-800 hover:text-white"
+                } cursor-pointer`}
+                onClick={() => handleProductSelection(item)}
               >
                 <div className="mb-6 lg:mb-0">
                   <img

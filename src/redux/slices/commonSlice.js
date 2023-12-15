@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   UIGlobalLoader: false,
+  isAddToCartOpen: false,
 };
 
 export const UILoader = createSlice({
@@ -14,10 +15,13 @@ export const UILoader = createSlice({
     isLoadingFalse: (state, action) => {
       state.UIGlobalLoader = false;
     },
+    setAddToCart: (state, action) => {
+      state.isAddToCartOpen = action.payload;
+    },
   },
 });
 
-const { isLoadingTrue, isLoadingFalse } = UILoader.actions;
+const { isLoadingTrue, isLoadingFalse, setAddToCart } = UILoader.actions;
 export default UILoader.reducer;
 
 export const setIsLoaderTrue = () => async (dispatch) => {
@@ -26,4 +30,8 @@ export const setIsLoaderTrue = () => async (dispatch) => {
 
 export const setIsLoaderFalse = () => async (dispatch) => {
   dispatch(isLoadingFalse());
+};
+
+export const setAddToCartValue = (isOpen) => async (dispatch) => {
+  await dispatch(setAddToCart(isOpen));
 };

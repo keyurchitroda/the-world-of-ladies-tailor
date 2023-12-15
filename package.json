@@ -26,6 +26,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-redux": "^9.0.4",
+    "react-spinners": "^0.13.8",
     "redux-persist": "^6.0.0",
     "sass": "^1.69.5",
     "swiper": "^11.0.5",

@@ -7,6 +7,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { ClockLoader } from "react-spinners";
 // import { Watch } from "react-loader-spinner";
 
 interface initialValues {
@@ -231,24 +232,15 @@ const Signup = () => {
                     className="flex justify-center align-middle  w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
                     disabled={loader}
                   >
-                    {loader ? (
-                      // <Watch
-                      //   height="20"
-                      //   width="20"
-                      //   radius="48"
-                      //   color="#FFFFFF"
-                      //   ariaLabel="watch-loading"
-                      //   wrapperStyle={{
-                      //     paddingRight: "10px",
-                      //     fontWeight: "bold",
-                      //   }}
-                      //   wrapperClassName="text-white"
-                      //   visible={true}
-                      // />
-                      <span className="ms-50">Loading</span>
-                    ) : (
-                      <span className="ms-50">Sign up</span>
-                    )}
+                    <ClockLoader
+                      speedMultiplier={10}
+                      color="#FFFFFF"
+                      loading={loader}
+                      size={18}
+                    />
+                    <span className="ms-50" style={{ paddingLeft: "10px" }}>
+                      Sign up
+                    </span>
                   </button>
 
                   <div className="mt-6 text-center ">

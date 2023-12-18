@@ -115,7 +115,6 @@ export const getAllCustomizeCategory =
     try {
       await dispatch(setIsLoaderTrue());
       let response: any = await getAllCustomizeCategoryService(categoryId);
-      console.log("response", response);
       if (response.success === true) {
         await dispatch(
           getAllCustomizeCategorySuccess(_.get(response, "data", []))
@@ -150,7 +149,6 @@ export const getAllCustomizeProduct =
     try {
       await dispatch(setIsLoaderTrue());
       let response: any = await getAllCustomizeProductService(categoryId);
-      console.log("response", response);
       if (response.success === true) {
         await dispatch(
           getAllCustomizeProductSuccess(_.get(response, "data", []))
@@ -167,7 +165,6 @@ export const getAllCustomizeProduct =
 
 export const selectCustomizeProduct =
   (product: any) => async (dispatch: AppDispatch) => {
-    console.log("product", product);
     try {
       await dispatch(setSelectCustimizeProductSuccess([product]));
     } catch (e: any) {

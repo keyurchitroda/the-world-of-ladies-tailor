@@ -3,7 +3,7 @@
 import axios from "axios";
 import { config } from "./config";
 import { getCookie } from "./cookies";
-import { defaultTokenString } from "@/helpers/helper";
+import { defaultAuthTokenString, defaultTokenString } from "@/helpers/helper";
 
 // passing full url to axios overwrite baseUrl
 
@@ -11,7 +11,7 @@ var axiosInstance = axios.create({
   baseURL: config.API_URL,
 });
 axiosInstance.interceptors.request.use((request) => {
-  const token = getCookie(defaultTokenString);
+  const token = getCookie(defaultAuthTokenString);
   if (token) {
     request.headers.Authorization = token;
   }

@@ -1,28 +1,90 @@
 "use client";
 
+import { config } from "@/apiConfig/config";
+import { getCookie } from "@/apiConfig/cookies";
+import { defaultAuthTokenString } from "@/helpers/helper";
 import { setAddToCartValue } from "@/redux/slices/commonSlice";
-import React from "react";
+import {
+  deleteCartProducts,
+  deleteCartProductsWithoutToken,
+  getAllCartProducts,
+} from "@/redux/slices/readymadeProductSlice";
+import _ from "lodash";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const AddToCart = () => {
   const isAddToCartOpen = useSelector(
     (state: any) => state.commonReducer.isAddToCartOpen
   );
+  const products = useSelector(
+    (state: any) => state.readymadeProductReducer.alladdtocartproducts
+  );
+
+  const addtocartproducts = useSelector(
+    (state: any) => state.readymadeProductReducer.addtocartproducts
+  );
+
   const dispatch = useDispatch<any>();
+
+  useEffect(() => {
+    if (isAddToCartOpen) {
+      dispatch(getAllCartProducts());
+    }
+  }, [isAddToCartOpen]);
 
   const handleCloseCart = async () => {
     await dispatch(setAddToCartValue(false));
   };
 
-  const getProductList = () => {
-    return (
-      <div className="mt-8">
-        <div className="flow-root">
-          <ul role="list" className="-my-6 divide-y divide-gray-200">
+  const totalCartPrice = () => {
+    const token = getCookie(defaultAuthTokenString);
+    if (token) {
+      const totalPrice = products.reduce(
+        (acc: any, item: any) =>
+          acc + _.toNumber(item.product_id.product_price),
+        0
+      );
+      return totalPrice;
+    } else {
+      const totalPrice1 = addtocartproducts.reduce(
+        (acc: any, item: any) => acc + _.toNumber(item.product_price),
+        0
+      );
+      return totalPrice1;
+    }
+  };
+
+  const removeProduct = async (productId: string) => {
+    const token = getCookie(defaultAuthTokenString);
+    if (token) {
+      await dispatch(deleteCartProducts(productId));
+    } else {
+      const removeCartProduct = _.filter(
+        addtocartproducts,
+        (item) => item._id !== productId
+      );
+      await dispatch(deleteCartProductsWithoutToken(removeCartProduct));
+    }
+  };
+
+  const getCartProducts = () => {
+    let cartProduct;
+    const token = getCookie(defaultAuthTokenString);
+    if (token) {
+      cartProduct = (
+        <>
+          {" "}
+          {_.map(products, (item, index) => (
             <li className="flex py-6">
               <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                 <img
-                  src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg"
+                  // src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg"
+                  src={`${config.ImageUrl}/product/${_.get(
+                    item,
+                    "product_id.product_image[0]",
+                    ""
+                  )}`}
                   alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
                   className="h-full w-full object-cover object-center"
                 />
@@ -32,11 +94,15 @@ const AddToCart = () => {
                 <div>
                   <div className="flex justify-between text-base font-medium text-gray-900">
                     <h3>
-                      <a href="#">Throwback Hip Bag</a>
+                      <a href="#">{_.get(item, "product_id.product_name")}</a>
                     </h3>
-                    <p className="ml-4">$90.00</p>
+                    <p className="ml-4">
+                      Rs. {_.get(item, "product_id.product_price")}
+                    </p>
                   </div>
-                  <p className="mt-1 text-sm text-gray-500">Salmon</p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {_.get(item, "product_id.product_desc")}
+                  </p>
                 </div>
                 <div className="flex flex-1 items-end justify-between text-sm">
                   <p className="text-gray-500">Qty 1</p>
@@ -45,6 +111,9 @@ const AddToCart = () => {
                     <button
                       type="button"
                       className="font-medium text-indigo-600 hover:text-indigo-500"
+                      onClick={() =>
+                        removeProduct(_.get(item, "product_id._id"))
+                      }
                     >
                       Remove
                     </button>
@@ -52,11 +121,24 @@ const AddToCart = () => {
                 </div>
               </div>
             </li>
+          ))}
+        </>
+      );
+    } else {
+      cartProduct = (
+        <>
+          {" "}
+          {_.map(addtocartproducts, (item, index) => (
             <li className="flex py-6">
               <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                 <img
-                  src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                  alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
+                  // src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg"
+                  src={`${config.ImageUrl}/product/${_.get(
+                    item,
+                    "product_image[0]",
+                    ""
+                  )}`}
+                  alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
                   className="h-full w-full object-cover object-center"
                 />
               </div>
@@ -65,11 +147,13 @@ const AddToCart = () => {
                 <div>
                   <div className="flex justify-between text-base font-medium text-gray-900">
                     <h3>
-                      <a href="#">Medium Stuff Satchel</a>
+                      <a href="#">{_.get(item, "product_name")}</a>
                     </h3>
-                    <p className="ml-4">$32.00</p>
+                    <p className="ml-4">Rs. {_.get(item, "product_price")}</p>
                   </div>
-                  <p className="mt-1 text-sm text-gray-500">Blue</p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    {_.get(item, "product_desc")}
+                  </p>
                 </div>
                 <div className="flex flex-1 items-end justify-between text-sm">
                   <p className="text-gray-500">Qty 1</p>
@@ -78,6 +162,7 @@ const AddToCart = () => {
                     <button
                       type="button"
                       className="font-medium text-indigo-600 hover:text-indigo-500"
+                      onClick={() => removeProduct(_.get(item, "_id"))}
                     >
                       Remove
                     </button>
@@ -85,141 +170,24 @@ const AddToCart = () => {
                 </div>
               </div>
             </li>
-            <li className="flex py-6">
-              <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                  alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
-                  className="h-full w-full object-cover object-center"
-                />
-              </div>
+          ))}
+        </>
+      );
+    }
+    return cartProduct;
+  };
 
-              <div className="ml-4 flex flex-1 flex-col">
-                <div>
-                  <div className="flex justify-between text-base font-medium text-gray-900">
-                    <h3>
-                      <a href="#">Medium Stuff Satchel</a>
-                    </h3>
-                    <p className="ml-4">$32.00</p>
-                  </div>
-                  <p className="mt-1 text-sm text-gray-500">Blue</p>
-                </div>
-                <div className="flex flex-1 items-end justify-between text-sm">
-                  <p className="text-gray-500">Qty 1</p>
-
-                  <div className="flex">
-                    <button
-                      type="button"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li className="flex py-6">
-              <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                  alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
-                  className="h-full w-full object-cover object-center"
-                />
-              </div>
-
-              <div className="ml-4 flex flex-1 flex-col">
-                <div>
-                  <div className="flex justify-between text-base font-medium text-gray-900">
-                    <h3>
-                      <a href="#">Medium Stuff Satchel</a>
-                    </h3>
-                    <p className="ml-4">$32.00</p>
-                  </div>
-                  <p className="mt-1 text-sm text-gray-500">Blue</p>
-                </div>
-                <div className="flex flex-1 items-end justify-between text-sm">
-                  <p className="text-gray-500">Qty 1</p>
-
-                  <div className="flex">
-                    <button
-                      type="button"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li className="flex py-6">
-              <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                  alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
-                  className="h-full w-full object-cover object-center"
-                />
-              </div>
-
-              <div className="ml-4 flex flex-1 flex-col">
-                <div>
-                  <div className="flex justify-between text-base font-medium text-gray-900">
-                    <h3>
-                      <a href="#">Medium Stuff Satchel</a>
-                    </h3>
-                    <p className="ml-4">$32.00</p>
-                  </div>
-                  <p className="mt-1 text-sm text-gray-500">Blue</p>
-                </div>
-                <div className="flex flex-1 items-end justify-between text-sm">
-                  <p className="text-gray-500">Qty 1</p>
-
-                  <div className="flex">
-                    <button
-                      type="button"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li className="flex py-6">
-              <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                <img
-                  src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                  alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
-                  className="h-full w-full object-cover object-center"
-                />
-              </div>
-
-              <div className="ml-4 flex flex-1 flex-col">
-                <div>
-                  <div className="flex justify-between text-base font-medium text-gray-900">
-                    <h3>
-                      <a href="#">Medium Stuff Satchel</a>
-                    </h3>
-                    <p className="ml-4">$32.00</p>
-                  </div>
-                  <p className="mt-1 text-sm text-gray-500">Blue</p>
-                </div>
-                <div className="flex flex-1 items-end justify-between text-sm">
-                  <p className="text-gray-500">Qty 1</p>
-
-                  <div className="flex">
-                    <button
-                      type="button"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
+  const getProductList = () => {
+    return (
+      <>
+        <div className="mt-8">
+          <div className="flow-root">
+            <ul role="list" className="-my-6 divide-y divide-gray-200">
+              {getCartProducts()}
+            </ul>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
   return (
@@ -278,7 +246,7 @@ const AddToCart = () => {
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
-                        <p>$262.00</p>
+                        <p>₹{totalCartPrice()}</p>
                       </div>
                       <p className="mt-0.5 text-sm text-gray-500">
                         Shipping and taxes calculated at checkout.

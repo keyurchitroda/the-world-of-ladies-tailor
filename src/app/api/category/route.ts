@@ -2,10 +2,22 @@ import { connect } from "@/dbConfig/dbConfig";
 import { NextRequest, NextResponse } from "next/server";
 import Category from "@/models/category.model";
 import { writeFile } from "fs/promises";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 connect();
 export async function GET(request: NextRequest) {
   try {
+    // const isId = await getDataFromToken(request);
+    // if (!isId) {
+    //   return NextResponse.json(
+    //     {
+    //       message: "Unauthorize error",
+    //       success: true,
+    //     },
+    //     { status: 401 }
+    //   );
+    // }
+
     const categories = await Category.find();
     return NextResponse.json(
       {

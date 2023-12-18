@@ -4,10 +4,15 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { getAllReadymadeProduct } from "@/redux/slices/readymadeProductSlice";
+import {
+  AddToCartProduct,
+  getAllCartProducts,
+  getAllReadymadeProduct,
+} from "@/redux/slices/readymadeProductSlice";
 import { config } from "@/apiConfig/config";
 import _ from "lodash";
 import { ClockLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 interface PropsParams {
   params: {
@@ -42,6 +47,10 @@ const Readymade = (props: PropsParams) => {
     (state: any) => state.commonReducer.UIGlobalLoader
   );
 
+  const addtocartproducts = useSelector(
+    (state: any) => state.readymadeProductReducer.addtocartproducts
+  );
+
   useEffect(() => {
     if (_.get(props, "params.categoryid", "")) {
       getReadymadeProductList();
@@ -58,6 +67,18 @@ const Readymade = (props: PropsParams) => {
 
   const viewProductDetailsNavigate = () => {
     router.push("/readymade/productdetail");
+  };
+
+  const addToCartProduct = async (product: any) => {
+    const isProductExist = _.filter(
+      addtocartproducts,
+      (item) => item._id === product._id
+    );
+    if (_.size(isProductExist) === 0) {
+      await dispatch(AddToCartProduct(product));
+    } else {
+      toast.error("Product already exists in cart");
+    }
   };
 
   return (
@@ -92,7 +113,7 @@ const Readymade = (props: PropsParams) => {
                     />
                     <div className="absolute h-full w-full bg-black/20 flex flex-col items-center justify-center -bottom-10 group-hover:bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300">
                       <button
-                        onClick={() => console.log("add to bag")}
+                        onClick={() => addToCartProduct(product)}
                         className="bg-red-600 text-white py-2 px-5"
                       >
                         Add to cart

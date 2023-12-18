@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -13,8 +13,9 @@ import { getCookie, removeCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString, defaultTokenString } from "@/helpers/helper";
 import { useRouter } from "next/navigation";
 import { signoutService } from "@/services/authService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAddToCartValue } from "@/redux/slices/commonSlice";
+import { getAllCartProducts } from "@/redux/slices/readymadeProductSlice";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -31,11 +32,22 @@ const Navbar = () => {
   const router = useRouter();
   const dispatch = useDispatch<any>();
 
+  const count = useSelector(
+    (state: any) => state.readymadeProductReducer.cartcount
+  );
+
   const onSignOut = async () => {
     await signoutService();
     await removeCookie(defaultAuthTokenString);
     router.push("/signin");
   };
+
+  useEffect(() => {
+    const tokenVal: any = getCookie("authToken");
+    if (tokenVal) {
+      dispatch(getAllCartProducts());
+    }
+  }, []);
 
   const isTokenAvailable = () => {
     const tokenVal: any = getCookie("authToken");
@@ -95,12 +107,15 @@ const Navbar = () => {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
-                  className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="mr-5 relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                   onClick={handleOpenCart}
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Shopping Cart</span>
                   <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full px-1 text-xs text-white">
+                    {count}
+                  </span>
                 </button>
 
                 {/* Profile dropdown */}

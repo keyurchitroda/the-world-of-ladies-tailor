@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getDataFromToken } from "./helpers/getDataFromToken";
 
 // This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isPublicPath = path === "/signin" || path === "/signup";
 
@@ -17,5 +18,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/", "/signin", "/signup", "/customize", "/readymade"],
+  matcher: ["/signin", "/signup"],
 };

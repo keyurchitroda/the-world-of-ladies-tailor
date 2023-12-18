@@ -39,6 +39,8 @@ const Customize = (props: PropsParams) => {
     (state: any) => state.commonReducer.UIGlobalLoader
   );
 
+  console.log("selectedProducts", selectedProducts);
+
   useEffect(() => {
     if (_.get(props, "params.categoryid", "")) {
       getCustomizeCategoryList();
@@ -108,7 +110,7 @@ const Customize = (props: PropsParams) => {
 
   return (
     <>
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8 flex">
+      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8 flex pr-0 pl-0">
         {/* <ol className="flex items-center justify-center flex-wrap w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4 rtl:space-x-reverse">
         {_.size(categories) === 0 && (
           <SyncLoader color="#424242" loading={isLoading} size={15} />

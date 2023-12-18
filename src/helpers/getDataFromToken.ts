@@ -1,9 +1,9 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Jwt from "jsonwebtoken";
 
 export const getDataFromToken = (request: NextRequest) => {
   try {
-    const token = request.cookies.get("token")?.value || "";
+    const token = request.headers.get("Authorization") || "";
     const decodeToken: any = Jwt.verify(token, process.env.TOEKN_SECRET!);
     return decodeToken.id;
   } catch (error: any) {

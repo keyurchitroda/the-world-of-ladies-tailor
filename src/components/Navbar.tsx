@@ -16,6 +16,7 @@ import { signoutService } from "@/services/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { setAddToCartValue } from "@/redux/slices/commonSlice";
 import { getAllCartProducts } from "@/redux/slices/readymadeProductSlice";
+import { logout } from "@/redux/store";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -39,6 +40,8 @@ const Navbar = () => {
   const onSignOut = async () => {
     await signoutService();
     await removeCookie(defaultAuthTokenString);
+    await removeCookie("user");
+    await dispatch(logout());
     router.push("/signin");
   };
 

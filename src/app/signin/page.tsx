@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { setCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString } from "@/helpers/helper";
 import { ClockLoader } from "react-spinners";
+import _ from "lodash";
 
 interface initialValues {
   email: string;
@@ -48,6 +49,7 @@ const Signin = () => {
       if (response.success === true) {
         toast.success(response.message);
         await setCookie(defaultAuthTokenString, response.data.token);
+        await setCookie("user", JSON.stringify(response.data.user));
         setLoader(false);
         router.push("/");
       } else {

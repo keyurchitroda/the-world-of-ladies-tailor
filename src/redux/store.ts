@@ -1,6 +1,6 @@
 "use client";
 
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
 import {
   persistStore,
   persistReducer,
@@ -17,12 +17,22 @@ import categoryReducer from "./slices/categorySlice";
 import readymadeProductReducer from "./slices/readymadeProductSlice";
 import customizeReducer from "./slices/customizeSlice";
 import commonReducer from "./slices/commonSlice";
+import checkoutReducer from "./slices/checkoutSlice";
+
+// Define a logout action
+export const logout = createAction("LOGOUT");
+
+// Reducer that listens to the logout action to reset the state
+const appReducer = createReducer({}, (builder) => {
+  builder.addCase(logout, () => ({})); // Reset the entire state
+});
 
 const reducers = combineReducers({
   categoryReducer,
   readymadeProductReducer,
   customizeReducer,
   commonReducer,
+  checkoutReducer,
 });
 
 const persistConfig = {
@@ -34,13 +44,21 @@ const persistConfig = {
     "readymadeProductReducer",
     "customizeReducer",
     "commonReducer",
+    "checkoutReducer",
   ],
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const persistedReducer: any = persistReducer(persistConfig, reducers);
+
+const rootReducer = (state: any, action: any) => {
+  if (action.type === "LOGOUT") {
+    state = undefined;
+  }
+  return persistedReducer(reducers(state, action), action);
+};
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

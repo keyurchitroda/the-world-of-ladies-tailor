@@ -6,6 +6,7 @@ import {
   addToCartProductService,
   getAllCartProductService,
   getAllReadymadeProductService,
+  getSingleProductService,
   removeCartProductService,
 } from "@/services/readymadeProductService";
 import _ from "lodash";
@@ -44,6 +45,7 @@ interface CategoryState {
   addtocartproducts2: any[];
   alladdtocartproducts: any[];
   cartcount: number;
+  product: ReadyMadeProductInterface;
 }
 
 const initialState: CategoryState = {
@@ -52,6 +54,23 @@ const initialState: CategoryState = {
   addtocartproducts2: [],
   alladdtocartproducts: [],
   cartcount: 0,
+  product: {
+    _id: "",
+    category_id: {
+      _id: "",
+      category_name: "",
+      category_image: "",
+      status: true,
+    },
+    product_name: "",
+    product_desc: "",
+    product_image: [],
+    product_price: "",
+    isStockAvailable: true,
+    product_available_qty: 0,
+    product_size: "",
+    status: true,
+  },
 };
 
 export const readymadeProductSlice = createSlice({
@@ -86,6 +105,12 @@ export const readymadeProductSlice = createSlice({
     ) => {
       state.addtocartproducts = action.payload;
     },
+    getSingleProductSuccess: (
+      state,
+      action: PayloadAction<ReadyMadeProductInterface>
+    ) => {
+      state.product = action.payload;
+    },
   },
 });
 
@@ -96,6 +121,7 @@ const {
   allAddToCartProductSuccess,
   setCartCountSuccess,
   deletCartProductWithoutTokenSuccess,
+  getSingleProductSuccess,
 } = readymadeProductSlice.actions;
 export default readymadeProductSlice.reducer;
 
@@ -197,8 +223,6 @@ export const deleteCartProductsWithoutToken =
     try {
       await dispatch(deletCartProductWithoutTokenSuccess(value));
       const initialState = getState();
-
-      console.log("initntininin", initialState);
       await dispatch(
         setCartCountSuccess(
           _.size(
@@ -207,6 +231,23 @@ export const deleteCartProductsWithoutToken =
         )
       );
     } catch (e: any) {
+      if (e.code === 500) {
+        console.log("error,", e);
+      }
+    }
+  };
+
+export const getSignleProductDetail =
+  (prodId: string) => async (dispatch: AppDispatch) => {
+    try {
+      await dispatch(setIsLoaderTrue());
+      let response: any = await getSingleProductService(prodId);
+      if (response.success === true) {
+        dispatch(getSingleProductSuccess(_.get(response, "data", {})));
+      }
+      await dispatch(setIsLoaderFalse());
+    } catch (e: any) {
+      await dispatch(setIsLoaderFalse());
       if (e.code === 500) {
         console.log("error,", e);
       }

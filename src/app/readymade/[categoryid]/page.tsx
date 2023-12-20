@@ -42,6 +42,7 @@ interface ReadyMadeProductInterface {
 }
 const Readymade = (props: PropsParams) => {
   const dispatch = useDispatch<AppDispatch>();
+
   const products = useSelector(
     (state: any) => state.readymadeProductReducer.products
   );
@@ -68,8 +69,8 @@ const Readymade = (props: PropsParams) => {
 
   const router = useRouter();
 
-  const viewProductDetailsNavigate = () => {
-    router.push("/readymade/productdetail");
+  const viewProductDetailsNavigate = (id: string) => {
+    router.push(`/readymade/productdetails/${id}`);
   };
 
   const addToCartProduct = async (product: any) => {
@@ -127,7 +128,7 @@ const Readymade = (props: PropsParams) => {
                         Add to cart
                       </button>
                       <button
-                        onClick={() => viewProductDetailsNavigate()}
+                        onClick={() => viewProductDetailsNavigate(product._id)}
                         className="bg-green-600 text-white py-2 px-5 mt-4"
                       >
                         View details

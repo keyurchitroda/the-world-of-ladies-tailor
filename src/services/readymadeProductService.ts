@@ -16,3 +16,7 @@ export const getAllCartProductService = () => {
 export const removeCartProductService = (id: string) => {
   return axiosInstance.delete(`addtocart?productId=${id}`);
 };
+
+export const getSingleProductService = (productId: string) => {
+  return gauestAxiosInstance.get(`productdetail?productId=${productId}`);
+};

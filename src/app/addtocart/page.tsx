@@ -26,6 +26,11 @@ const AddToCart = () => {
     (state: any) => state.readymadeProductReducer.addtocartproducts
   );
 
+  console.log("addtocartproducts", addtocartproducts);
+  const addtocartproductswithouttoken = useSelector(
+    (state: any) => state.readymadeProductReducer.addtocartproducts2
+  );
+
   const dispatch = useDispatch<any>();
 
   useEffect(() => {
@@ -66,6 +71,15 @@ const AddToCart = () => {
         (item) => item._id !== productId
       );
       await dispatch(deleteCartProductsWithoutToken(removeCartProduct));
+    }
+  };
+
+  const isTokenAvailable = () => {
+    const token = getCookie(defaultAuthTokenString);
+    if (token) {
+      return true;
+    } else {
+      return false;
     }
   };
 

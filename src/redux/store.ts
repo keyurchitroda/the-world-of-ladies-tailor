@@ -54,7 +54,7 @@ const rootReducer = (state: any, action: any) => {
   if (action.type === "LOGOUT") {
     state = undefined;
   }
-  return persistedReducer(reducers(state, action), action);
+  return persistedReducer(state, action);
 };
 
 export const store = configureStore({

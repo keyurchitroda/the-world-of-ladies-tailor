@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import { getCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString } from "@/helpers/helper";
 import { number } from "yup";
+import { RootState } from "@reduxjs/toolkit/query";
 
 interface ReadyMadeProductInterface {
   _id: string;
@@ -40,6 +41,7 @@ interface ReadyMadeProductInterface {
 interface CategoryState {
   products: ReadyMadeProductInterface[];
   addtocartproducts: any[];
+  addtocartproducts2: any[];
   alladdtocartproducts: any[];
   cartcount: number;
 }
@@ -47,6 +49,7 @@ interface CategoryState {
 const initialState: CategoryState = {
   products: [],
   addtocartproducts: [],
+  addtocartproducts2: [],
   alladdtocartproducts: [],
   cartcount: 0,
 };
@@ -62,8 +65,14 @@ export const readymadeProductSlice = createSlice({
       state.products = action.payload;
     },
 
-    addToCartProductSuccess: (state, action: PayloadAction<any[]>) => {
-      state.addtocartproducts = [...state.addtocartproducts, action.payload];
+    addToCartProductSuccess: (state, action: PayloadAction<any>) => {
+      state.addtocartproducts.push(...action.payload);
+    },
+    addToCartProductWithoutTokenSuccess: (
+      state,
+      action: PayloadAction<any>
+    ) => {
+      state.addtocartproducts2.push(...action.payload);
     },
     allAddToCartProductSuccess: (state, action: PayloadAction<any[]>) => {
       state.alladdtocartproducts = action.payload;
@@ -83,6 +92,7 @@ export const readymadeProductSlice = createSlice({
 const {
   getAllReadymadeProductSuccess,
   addToCartProductSuccess,
+  addToCartProductWithoutTokenSuccess,
   allAddToCartProductSuccess,
   setCartCountSuccess,
   deletCartProductWithoutTokenSuccess,
@@ -109,23 +119,37 @@ export const getAllReadymadeProduct =
 export const AddToCartProduct =
   (product: any) => async (dispatch: AppDispatch) => {
     try {
-      const token = getCookie(defaultAuthTokenString);
-      if (token) {
-        const body = {
-          product_id: product._id,
-        };
-        let response: any = await addToCartProductService(body);
-        if (response.success === true) {
-          toast.success(response.message);
-          await dispatch(getAllCartProducts());
-        } else {
-          toast.success("Something went wrong");
-        }
+      const body = {
+        product_id: product._id,
+      };
+      let response: any = await addToCartProductService(body);
+      if (response.success === true) {
+        toast.success(response.message);
+        await dispatch(getAllCartProducts());
       } else {
-        await dispatch(addToCartProductSuccess(product));
-        // await dispatch(setAddToCartValue(true));
-        toast.success("Product successfully added in cart");
+        toast.success("Something went wrong");
       }
+    } catch (error: any) {
+      toast.error(error.message.error);
+    }
+  };
+
+export const AddToCartProductWithoutToken =
+  (product: any) => async (dispatch: AppDispatch, getState: () => any) => {
+    console.log("product 88888888888888888888888", product);
+    try {
+      await dispatch(addToCartProductSuccess([product]));
+      const initialState = getState(); // This will get the entire initial state
+
+      console.log("initntininin", initialState);
+      await dispatch(
+        setCartCountSuccess(
+          _.size(
+            _.get(initialState, "readymadeProductReducer.addtocartproducts", [])
+          )
+        )
+      );
+      toast.success("Product successfully added in cart");
     } catch (error: any) {
       toast.error(error.message.error);
     }
@@ -169,9 +193,19 @@ export const deleteCartProducts =
   };
 
 export const deleteCartProductsWithoutToken =
-  (value: any) => async (dispatch: AppDispatch) => {
+  (value: any) => async (dispatch: AppDispatch, getState: () => any) => {
     try {
       await dispatch(deletCartProductWithoutTokenSuccess(value));
+      const initialState = getState();
+
+      console.log("initntininin", initialState);
+      await dispatch(
+        setCartCountSuccess(
+          _.size(
+            _.get(initialState, "readymadeProductReducer.addtocartproducts", [])
+          )
+        )
+      );
     } catch (e: any) {
       if (e.code === 500) {
         console.log("error,", e);

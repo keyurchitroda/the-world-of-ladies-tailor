@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import {
   AddToCartProduct,
+  AddToCartProductWithoutToken,
   getAllCartProducts,
   getAllReadymadeProduct,
 } from "@/redux/slices/readymadeProductSlice";
@@ -13,6 +14,8 @@ import { config } from "@/apiConfig/config";
 import _ from "lodash";
 import { ClockLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { getCookie } from "@/apiConfig/cookies";
+import { defaultAuthTokenString } from "@/helpers/helper";
 
 interface PropsParams {
   params: {
@@ -70,14 +73,19 @@ const Readymade = (props: PropsParams) => {
   };
 
   const addToCartProduct = async (product: any) => {
-    const isProductExist = _.filter(
-      addtocartproducts,
-      (item) => item._id === product._id
-    );
-    if (_.size(isProductExist) === 0) {
+    const token = getCookie(defaultAuthTokenString);
+    if (token) {
       await dispatch(AddToCartProduct(product));
     } else {
-      toast.error("Product already exists in cart");
+      const isProductExist = _.filter(
+        addtocartproducts,
+        (item) => item._id === product._id
+      );
+      if (_.size(isProductExist) === 0) {
+        await dispatch(AddToCartProductWithoutToken(product));
+      } else {
+        toast.error("Product already exists in cart");
+      }
     }
   };
 
@@ -98,7 +106,7 @@ const Readymade = (props: PropsParams) => {
           </div>
         ) : (
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product: ReadyMadeProductInterface) => (
+            {_.map(products, (product: ReadyMadeProductInterface) => (
               <section key={product._id} className="mx-auto w-fit border">
                 <div className="w-72 h-fit group">
                   <div className="relative overflow-hidden">

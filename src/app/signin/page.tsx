@@ -11,6 +11,8 @@ import { setCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString } from "@/helpers/helper";
 import { ClockLoader } from "react-spinners";
 import _ from "lodash";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/store";
 
 interface initialValues {
   email: string;
@@ -36,6 +38,8 @@ const Signin = () => {
       .min(8, "Your password is too short."),
   });
 
+  const dispatch = useDispatch<any>();
+
   const onSignIn = async (values: any) => {
     try {
       setLoader(true);
@@ -45,11 +49,11 @@ const Signin = () => {
         password,
       };
       const response: any = await signinService(reqBody);
-      console.log("response", response);
       if (response.success === true) {
         toast.success(response.message);
         await setCookie(defaultAuthTokenString, response.data.token);
         await setCookie("user", JSON.stringify(response.data.user));
+        await dispatch(logout());
         setLoader(false);
         router.push("/");
       } else {

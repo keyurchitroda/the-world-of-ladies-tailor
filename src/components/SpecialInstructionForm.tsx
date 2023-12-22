@@ -21,13 +21,6 @@ const SpecialInstructionForm = ({ categoryVal }: any) => {
   function openModal() {
     setIsOpen(true);
   }
-  const getStyles = (errors: any, fieldName: string) => {
-    if (getIn(errors, fieldName)) {
-      return {
-        border: "1px solid red",
-      };
-    }
-  };
 
   const [inputValues, setInputValues] = useState({
     customize_category_id: "",

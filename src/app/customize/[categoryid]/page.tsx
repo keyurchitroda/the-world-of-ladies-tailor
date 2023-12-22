@@ -3,6 +3,7 @@
 import { config } from "@/apiConfig/config";
 import SpecialInstructionForm from "@/components/SpecialInstructionForm";
 import {
+  customizeViewDetails,
   getAllCustomizeCategory,
   getAllCustomizeProduct,
   netxCategoryStep,
@@ -10,6 +11,7 @@ import {
 } from "@/redux/slices/customizeSlice";
 import { AppDispatch } from "@/redux/store";
 import _ from "lodash";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ClockLoader, PacmanLoader, SyncLoader } from "react-spinners";
@@ -22,6 +24,7 @@ interface PropsParams {
 
 const Customize = (props: PropsParams) => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
   const [loader, setLoader] = useState(false);
 
   const categories = useSelector(
@@ -40,6 +43,13 @@ const Customize = (props: PropsParams) => {
   const isLoading = useSelector(
     (state: any) => state.commonReducer.UIGlobalLoader
   );
+
+  console.log("selected", selectedProducts);
+
+  const onViewDetails = async () => {
+    await dispatch(customizeViewDetails(selectedProducts));
+    router.push(`/customize/productdetails`);
+  };
 
   useEffect(() => {
     if (_.get(props, "params.categoryid", "")) {
@@ -120,8 +130,28 @@ const Customize = (props: PropsParams) => {
     return classes;
   };
 
-  const handelAddTCartCustomize = () => {};
+  const TotalPrice = () => {
+    const itemsWithImages = selectedProducts.filter(
+      (item: any) => item.customize_product_image
+    );
+    let sumOfPrices = itemsWithImages.reduce((total: any, product: any) => {
+      // Parse the price to a number (assuming price is a string)
+      let price = parseFloat(product.customize_product_price);
 
+      // Add the parsed price to the total
+      return total + price;
+    }, 0); // Start with an initial total of 0
+    console.log("sumOfPrices", sumOfPrices);
+
+    // Add the base price to the sum
+    let totalPrice = sumOfPrices + 200;
+    // Render the total price
+    return (
+      <div>
+        <p>{`Total Price: Rs.${totalPrice.toFixed(2)}`}</p>
+      </div>
+    );
+  };
   return (
     <>
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8 flex pr-0 pl-0">
@@ -228,9 +258,10 @@ const Customize = (props: PropsParams) => {
           width: "100%",
           // zIndex: 999,
         }}
-        className="w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4 rtl:space-x-reverse"
+        className="flex justify-around items-center w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4 rtl:space-x-reverse"
       >
-        <div className="flex justify-between align-middle">
+        <span className="text-lg text-pink-700 mt-4">{TotalPrice()}</span>
+        <div className="flex justify-end align-middle">
           <button
             onClick={handlePreviousClick}
             className={`bg-red-600 text-white py-2 px-5 mt-4 ${
@@ -249,10 +280,10 @@ const Customize = (props: PropsParams) => {
             </button>
           ) : (
             <button
-              onClick={handelAddTCartCustomize}
-              className="bg-red-600 text-white py-2 px-5 mt-4"
+              onClick={onViewDetails}
+              className="bg-blue-500 text-white py-2 px-5 mt-4"
             >
-              Add To Cart
+              View details
             </button>
           )}
         </div>

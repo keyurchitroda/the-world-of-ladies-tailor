@@ -49,6 +49,7 @@ interface CustomizeCategoryState {
   current_category: number;
   products: CustomizeProductInterface[];
   selectedProducts: CustomizeProductInterface[];
+  is_special_instruction: boolean;
 }
 
 const initialState: CustomizeCategoryState = {
@@ -56,6 +57,7 @@ const initialState: CustomizeCategoryState = {
   products: [],
   current_category: 0,
   selectedProducts: [],
+  is_special_instruction: false,
 };
 
 export const customizeSlice: any = createSlice({
@@ -79,6 +81,9 @@ export const customizeSlice: any = createSlice({
       action: PayloadAction<CustomizeProductInterface[]>
     ) => {
       state.products = action.payload;
+    },
+    isSpecialInstruction: (state, action: PayloadAction<boolean>) => {
+      state.is_special_instruction = action.payload;
     },
     setSelectCustimizeProductSuccess: (
       state,
@@ -107,6 +112,7 @@ const {
   setCurrentCustomizeCategorySuccess,
   getAllCustomizeProductSuccess,
   setSelectCustimizeProductSuccess,
+  isSpecialInstruction,
 } = customizeSlice.actions;
 export default customizeSlice.reducer;
 
@@ -167,6 +173,28 @@ export const selectCustomizeProduct =
   (product: any) => async (dispatch: AppDispatch) => {
     try {
       await dispatch(setSelectCustimizeProductSuccess([product]));
+    } catch (e: any) {
+      if (e.code === 500) {
+        console.log("error,", e);
+      }
+    }
+  };
+
+export const setSpecialInstruction =
+  (value: boolean) => async (dispatch: AppDispatch) => {
+    try {
+      await dispatch(isSpecialInstruction());
+    } catch (e: any) {
+      if (e.code === 500) {
+        console.log("error,", e);
+      }
+    }
+  };
+
+export const setInputValue =
+  (inputvalue: any) => async (dispatch: AppDispatch) => {
+    try {
+      await dispatch(setSelectCustimizeProductSuccess([inputvalue]));
     } catch (e: any) {
       if (e.code === 500) {
         console.log("error,", e);

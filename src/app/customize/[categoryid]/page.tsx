@@ -1,6 +1,7 @@
 "use client";
 
 import { config } from "@/apiConfig/config";
+import SpecialInstructionForm from "@/components/SpecialInstructionForm";
 import {
   getAllCustomizeCategory,
   getAllCustomizeProduct,
@@ -35,11 +36,10 @@ const Customize = (props: PropsParams) => {
   const selectedProducts = useSelector(
     (state: any) => state.customizeReducer.selectedProducts
   );
+
   const isLoading = useSelector(
     (state: any) => state.commonReducer.UIGlobalLoader
   );
-
-  console.log("selectedProducts", selectedProducts);
 
   useEffect(() => {
     if (_.get(props, "params.categoryid", "")) {
@@ -72,6 +72,18 @@ const Customize = (props: PropsParams) => {
       await dispatch(getAllCustomizeProduct(previousStepId));
     } else {
       console.log("Start of steps reached");
+    }
+  };
+
+  const isSpecailInstruction = () => {
+    const categoryVal = categories.at(currentCategory);
+    if (
+      _.get(categoryVal, "customize_category_name", "") ===
+      "Special Instructions"
+    ) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -108,42 +120,11 @@ const Customize = (props: PropsParams) => {
     return classes;
   };
 
+  const handelAddTCartCustomize = () => {};
+
   return (
     <>
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8 flex pr-0 pl-0">
-        {/* <ol className="flex items-center justify-center flex-wrap w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4 rtl:space-x-reverse">
-        {_.size(categories) === 0 && (
-          <SyncLoader color="#424242" loading={isLoading} size={15} />
-        )}
-        {_.map(categories, (item, index) => (
-          <li
-            className={`flex items-center ${
-              index === currentCategory && `text-blue-600 dark:text-blue-500`
-            } `}
-          >
-            <span className="flex items-center justify-center w-5 h-5 me-2 text-xs border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
-              {index + 1}
-            </span>
-            {_.get(item, "customize_category_name", "")}
-            <svg
-              className="w-3 h-3 ms-2 sm:ms-4 rtl:rotate-180"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 12 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m7 9 4-4-4-4M1 9l4-4-4-4"
-              />
-            </svg>
-          </li>
-        ))}
-      </ol> */}
-
         <ol className="space-y-4 w-72">
           {_.map(categories, (item, index) => (
             <li>
@@ -184,50 +165,60 @@ const Customize = (props: PropsParams) => {
           ))}
         </ol>
 
-        <div className="container p-5 pt-0 ">
-          {isLoading ? (
-            <div className="text-center flex justify-center">
-              <ClockLoader
-                speedMultiplier={10}
-                color="#424242"
-                loading={isLoading}
-                size={100}
+        {isSpecailInstruction() ? (
+          <div className="container p-20 pt-0 max-sm:p-4">
+            <div className="">
+              <SpecialInstructionForm
+                categoryVal={categories.at(currentCategory)}
               />
             </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {_.map(products, (item, index) => (
-                <div
-                  key={_.get(item, "_id", "")}
-                  // className="border-2	rounded-md	p-2 -bottom-10 hover:bg-gray-800 hover:text-white cursor-pointer"
-                  className={`border-2 rounded-md p-2 ${
-                    isProductSelcted(item)
-                      ? "bg-gray-800 text-white"
-                      : "hover:bg-gray-800 hover:text-white"
-                  } cursor-pointer`}
-                  onClick={() => handleProductSelection(item)}
-                >
-                  <div className="mb-6 lg:mb-0">
-                    <img
-                      src={`${config.ImageUrl}/customizeproduct/${_.get(
-                        item,
-                        "customize_product_image",
-                        ""
-                      )}`}
-                      className="w-full rounded-md shadow-lg"
-                    />
+          </div>
+        ) : (
+          <div className="container p-5 pt-0 ">
+            {isLoading ? (
+              <div className="text-center flex justify-center">
+                <ClockLoader
+                  speedMultiplier={10}
+                  color="#424242"
+                  loading={isLoading}
+                  size={100}
+                />
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+                {_.map(products, (item, index) => (
+                  <div
+                    key={_.get(item, "_id", "")}
+                    // className="border-2	rounded-md	p-2 -bottom-10 hover:bg-gray-800 hover:text-white cursor-pointer"
+                    className={`border-2 rounded-md p-2 ${
+                      isProductSelcted(item)
+                        ? "bg-gray-800 text-white"
+                        : "hover:bg-gray-800 hover:text-white"
+                    } cursor-pointer`}
+                    onClick={() => handleProductSelection(item)}
+                  >
+                    <div className="mb-6 lg:mb-0">
+                      <img
+                        src={`${config.ImageUrl}/customizeproduct/${_.get(
+                          item,
+                          "customize_product_image",
+                          ""
+                        )}`}
+                        className="w-full rounded-md shadow-lg"
+                      />
+                    </div>
+                    <h2 className="mt-3 text-lg capitalize">
+                      {_.get(item, "customize_product_name", "")}
+                    </h2>
+                    <p className="text-base mt-1 ml-1 inline-block">
+                      Rs. {_.get(item, "customize_product_price", "")}
+                    </p>
                   </div>
-                  <h2 className="mt-3 text-lg capitalize">
-                    {_.get(item, "customize_product_name", "")}
-                  </h2>
-                  <p className="text-base mt-1 ml-1 inline-block">
-                    Rs. {_.get(item, "customize_product_price", "")}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <ol
         style={{
@@ -235,7 +226,7 @@ const Customize = (props: PropsParams) => {
           bottom: 0,
           left: 0,
           width: "100%",
-          zIndex: 999,
+          // zIndex: 999,
         }}
         className="w-full p-3 space-x-2 text-sm font-medium text-center text-gray-500 bg-white border border-gray-200 rounded-lg shadow-sm dark:text-gray-400 sm:text-base dark:bg-gray-800 dark:border-gray-700 sm:p-4 sm:space-x-4 rtl:space-x-reverse"
       >
@@ -257,7 +248,10 @@ const Customize = (props: PropsParams) => {
               Next
             </button>
           ) : (
-            <button className="bg-red-600 text-white py-2 px-5 mt-4">
+            <button
+              onClick={handelAddTCartCustomize}
+              className="bg-red-600 text-white py-2 px-5 mt-4"
+            >
               Add To Cart
             </button>
           )}

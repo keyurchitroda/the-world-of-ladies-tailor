@@ -55,7 +55,11 @@ const Signin = () => {
         await setCookie("user", JSON.stringify(response.data.user));
         await dispatch(logout());
         setLoader(false);
-        router.push("/");
+        if (response.data.user.isAdmin) {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
       } else {
         setLoader(false);
         toast.success(response.error);

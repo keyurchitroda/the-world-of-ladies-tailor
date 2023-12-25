@@ -13,6 +13,7 @@ import { AppDispatch } from "@/redux/store";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { ClockLoader, PacmanLoader, SyncLoader } from "react-spinners";
 
@@ -44,11 +45,17 @@ const Customize = (props: PropsParams) => {
     (state: any) => state.commonReducer.UIGlobalLoader
   );
 
-  console.log("selected", selectedProducts);
-
   const onViewDetails = async () => {
-    await dispatch(customizeViewDetails(selectedProducts));
-    router.push(`/customize/productdetails`);
+    const isCategorySelectionValid = validateCategories();
+    if (!isCategorySelectionValid) {
+      toast.error(
+        "Please select at least one product in each category before proceeding."
+      );
+      return; // Prevent moving to the next step if validation fails
+    } else {
+      await dispatch(customizeViewDetails(selectedProducts));
+      router.push(`/customize/productdetails`);
+    }
   };
 
   useEffect(() => {
@@ -63,6 +70,21 @@ const Customize = (props: PropsParams) => {
       getAllCustomizeCategory(_.get(props, "params.categoryid", ""))
     );
     setLoader(false);
+  };
+
+  console.log("selected product", selectedProducts);
+  console.log("currentCategory", categories);
+  const [validationError, setValidationError] = useState(false);
+
+  const validateCategories = () => {
+    const allCategoriesIds = categories.map((category: any) => category._id);
+    const isCategorySelectionValid = allCategoriesIds.every(
+      (categoryId: string) =>
+        selectedProducts.some(
+          (product: any) => product.customize_category_id._id === categoryId
+        )
+    );
+    return isCategorySelectionValid;
   };
 
   const handleNextClick = async () => {
@@ -154,7 +176,7 @@ const Customize = (props: PropsParams) => {
   };
   return (
     <>
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8 flex pr-0 pl-0">
+      <div className="mt-24 mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8 flex pr-0 pl-0">
         <ol className="space-y-4 w-72">
           {_.map(categories, (item, index) => (
             <li>

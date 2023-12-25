@@ -11,12 +11,13 @@ import {
 import Link from "next/link";
 import { getCookie, removeCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString, defaultTokenString } from "@/helpers/helper";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signoutService } from "@/services/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { setAddToCartValue } from "@/redux/slices/commonSlice";
 import { getAllCartProducts } from "@/redux/slices/readymadeProductSlice";
 import { logout } from "@/redux/store";
+import _ from "lodash";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -32,9 +33,17 @@ function classNames(...classes: any) {
 const Navbar = () => {
   const router = useRouter();
   const dispatch = useDispatch<any>();
+  const url = usePathname();
 
+  const segments = url.split("/"); // Split the URL by '/'
+  const customizePath = segments[1];
+  console.log("--=-customizePath=-=-=", customizePath);
   const count = useSelector(
     (state: any) => state.readymadeProductReducer.cartcount
+  );
+
+  const viewdetails = useSelector(
+    (state: any) => state.customizeReducer.viewdetails
   );
 
   const onSignOut = async () => {
@@ -62,7 +71,10 @@ const Navbar = () => {
   };
 
   return (
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure
+      as="nav"
+      className="bg-gray-800 fixed z-20 w-full start-0 top-0"
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -108,18 +120,20 @@ const Navbar = () => {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  type="button"
-                  className="mr-5 relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                  onClick={handleOpenCart}
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Shopping Cart</span>
-                  <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
-                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full px-1 text-xs text-white">
-                    {count}
-                  </span>
-                </button>
+                {customizePath !== "customize" && (
+                  <button
+                    type="button"
+                    className="mr-5 relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    onClick={handleOpenCart}
+                  >
+                    <span className="absolute -inset-1.5" />
+                    <span className="sr-only">Shopping Cart</span>
+                    <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full px-1 text-xs text-white">
+                      {count}
+                    </span>
+                  </button>
+                )}
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
@@ -200,6 +214,20 @@ const Navbar = () => {
                     </Menu.Items>
                   </Transition>
                 </Menu>
+
+                {customizePath === "customize" && (
+                  <Link
+                    href="/customize/productdetails"
+                    className="ml-5 relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                    // onClick={handleOpenCart}
+                  >
+                    <span className="absolute -inset-1.5" />
+                    <span className="">View Products</span>
+                    <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full px-1 text-xs text-white">
+                      {_.size(viewdetails)}
+                    </span>
+                  </Link>
+                )}
               </div>
             </div>
           </div>

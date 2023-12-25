@@ -199,11 +199,11 @@ const ProductDetail = (props: PropsParams) => {
     //     )}
     //   </div>
     // </div>
-    <section className=" overflow-hidden bg-white font-poppins dark:bg-gray-800">
+    <section className="mt-24 overflow-hidden bg-white font-poppins dark:bg-gray-800">
       <div className="max-w-6xl px-4 py-4 mx-auto lg:py-8 md:px-6">
         <div className="flex flex-wrap -mx-4">
           <div className="w-full px-4 md:w-1/2 ">
-            <div className="sticky top-0 z-50 overflow-hidden ">
+            <div className="sticky top-0 overflow-hidden ">
               <div
                 className="relative mb-6 lg:mb-10 flex items-center"
                 style={{ height: "450px" }}

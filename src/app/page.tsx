@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <>
-      <div className="mt-1">
+      <div className="mt-14">
         <CoverSwiper />
       </div>
       <div className="text-center">

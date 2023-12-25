@@ -37,7 +37,6 @@ const Navbar = () => {
 
   const segments = url.split("/"); // Split the URL by '/'
   const customizePath = segments[1];
-  console.log("--=-customizePath=-=-=", customizePath);
   const count = useSelector(
     (state: any) => state.readymadeProductReducer.cartcount
   );

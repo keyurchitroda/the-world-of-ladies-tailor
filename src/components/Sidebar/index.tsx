@@ -183,7 +183,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <Link
-                              href="/"
+                              href="/admin"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
                                 pathname === "/admin" && "bg-blue-700"
                               } `}
@@ -276,7 +276,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <Link
-                              href="/category/list"
+                              href="/admin/category/list"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
                                 pathname === "/" && "bg-blue-700"
                               } `}
@@ -286,7 +286,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href="/category/add"
+                              href="/admin/category/add"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
                                 pathname === "/" && "bg-blue-700"
                               } `}
@@ -379,7 +379,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <Link
-                              href="/subcategory/list"
+                              href="/admin/subcategory/list"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
                                 pathname === "/" && "text-white"
                               } `}
@@ -389,7 +389,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href="/subcategory/add"
+                              href="/admin/subcategory/add"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
                                 pathname === "/" && "bg-blue-700"
                               } `}
@@ -482,7 +482,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <Link
-                              href="/readymade/list"
+                              href="/admin/readymade/list"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
                                 pathname === "/" && "bg-blue-700"
                               } `}
@@ -492,7 +492,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <Link
-                              href="/readymade/add"
+                              href="/admin/readymade/add"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
                                 pathname === "/" && "bg-blue-700"
                               } `}

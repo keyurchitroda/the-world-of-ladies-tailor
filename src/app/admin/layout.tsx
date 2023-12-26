@@ -7,12 +7,14 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 
 import React, { useState } from "react";
+import { Toaster } from "react-hot-toast";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
+        <Toaster position="top-center" reverseOrder={false} />
         <div className="dark:bg-boxdark-2 dark:text-white">
           <div className="flex h-screen overflow-hidden">
             {/* <!-- ===== Sidebar Start ===== --> */}

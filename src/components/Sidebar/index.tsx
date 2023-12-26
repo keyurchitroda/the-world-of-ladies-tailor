@@ -278,7 +278,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             <Link
                               href="/admin/category/list"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
-                                pathname === "/" && "bg-blue-700"
+                                pathname === "/admin/category/list" &&
+                                "bg-blue-700"
                               } `}
                             >
                               Category List
@@ -288,7 +289,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             <Link
                               href="/admin/category/add"
                               className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:bg-blue-700 hover:text-white ${
-                                pathname === "/" && "bg-blue-700"
+                                pathname === "/admin/category/add" &&
+                                "bg-blue-700"
                               } `}
                             >
                               Category Add

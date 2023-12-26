@@ -126,7 +126,7 @@ const {
 export default readymadeProductSlice.reducer;
 
 export const getAllReadymadeProduct =
-  (categoryId: string) => async (dispatch: AppDispatch) => {
+  (categoryId?: any) => async (dispatch: AppDispatch) => {
     try {
       await dispatch(setIsLoaderTrue());
       let response: any = await getAllReadymadeProductService(categoryId);

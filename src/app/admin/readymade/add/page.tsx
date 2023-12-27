@@ -117,8 +117,10 @@ const Add = () => {
                       <option disabled value="">
                         Select Category
                       </option>
-                      {categories.map((item: any) => (
-                        <option value={item._id}>{item.category_name}</option>
+                      {categories.map((item: any, index: any) => (
+                        <option key={index} value={item._id}>
+                          {item.category_name}
+                        </option>
                       ))}
                     </Field>
                     <ErrorMessage

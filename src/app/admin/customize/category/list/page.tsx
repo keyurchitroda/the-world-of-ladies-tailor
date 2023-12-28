@@ -1,7 +1,8 @@
 "use client";
 import { config } from "@/apiConfig/config";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { getAllReadymadeProduct } from "@/redux/slices/readymadeProductSlice";
+import { getAllCategory } from "@/redux/slices/categorySlice";
+import { getAllCustomizeCategory } from "@/redux/slices/customizeSlice";
 import { AppDispatch } from "@/redux/store";
 import _ from "lodash";
 import Link from "next/link";
@@ -9,24 +10,64 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const List = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector(
-    (state: any) => state.readymadeProductReducer.products
+  const categories = useSelector(
+    (state: any) => state.customizeReducer.categories
   );
+
+  const categories1 = useSelector(
+    (state: any) => state.categoryReducer.categories
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
-    getReadymadeProductList();
+    getCustomizeCategoryList();
+    getCategoryList();
   }, [dispatch]);
 
-  const getReadymadeProductList = async () => {
-    await dispatch(getAllReadymadeProduct());
+  const getCustomizeCategoryList = async () => {
+    await dispatch(getAllCustomizeCategory());
+  };
+
+  const getCategoryList = async () => {
+    await dispatch(getAllCategory());
+  };
+
+  const handleSearchByCategor = async (event: any) => {
+    console.log("event", event?.target.value);
+    await dispatch(getAllCustomizeCategory(event?.target.value));
   };
 
   return (
     <>
-      <Breadcrumb pageName="Product List" />
-      <div className="flex items-end justify-end">
+      <Breadcrumb pageName="Category List" />
+      <div className="flex items-end justify-between">
+        <div className="w-80 px-3 mb-6 md:mb-0">
+          <label
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="category"
+          >
+            Category
+          </label>
+          <select
+            id="category"
+            name="category"
+            autoComplete="country"
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white"
+            onChange={handleSearchByCategor}
+          >
+            <option value="" selected>
+              Search Category
+            </option>
+            {categories1.map((item: any, index: any) => (
+              <option key={index} value={item._id}>
+                {item.category_name}
+              </option>
+            ))}
+          </select>
+        </div>
         <Link
-          href="/admin/readymade/add"
+          href="/admin/customize/category/add"
           className=" bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-12 rounded "
         >
           Add
@@ -37,22 +78,14 @@ const List = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left">
-                <th className="min-w-[220px] py-4 px-4 font-medium text-black  xl:pl-11">
-                  Image
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
+                  Category name
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Category
+                  Customize Category Name
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Product Name
-                </th>
-
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Product Description
-                </th>
-
-                <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Product Price
+                  Customize Category Desc
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black ">
                   Status
@@ -61,33 +94,25 @@ const List = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((packageItem: any, key: any) => (
+              {categories.map((packageItem: any, key: any) => (
                 <tr key={key} className="text-left">
-                  <td className="border-b border-[#eee] py-5 px-4 pl-2  xl:pl-11">
-                    <img
-                      className=""
-                      src={`${config.ImageUrl}/product/${_.get(
-                        packageItem,
-                        "product_image[0]",
-                        ""
-                      )}`}
-                      width={128}
-                      height={128}
-                    />
-                  </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
                     <p className="text-black ">
-                      {_.get(packageItem, "category_id.category_name", "")}
+                      {" "}
+                      {packageItem.category_id.category_name}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_name}</p>
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.customize_category_name}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_desc}</p>
-                  </td>
-                  <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_price}</p>
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.customize_category_desc}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
                     <p

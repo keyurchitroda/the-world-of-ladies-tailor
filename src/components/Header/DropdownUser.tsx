@@ -1,8 +1,15 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { signoutService } from "@/services/authService";
+import { removeCookie } from "@/apiConfig/cookies";
+import { defaultAuthTokenString } from "@/helpers/helper";
+import { AppDispatch, logout } from "@/redux/store";
+import { useDispatch } from "react-redux";
 
 const DropdownUser = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -33,6 +40,14 @@ const DropdownUser = () => {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
+
+  const onSignOut = async () => {
+    await signoutService();
+    await removeCookie(defaultAuthTokenString);
+    await removeCookie("user");
+    await dispatch(logout());
+    window.location.href = "/signin";
+  };
 
   return (
     <div className="relative">
@@ -84,11 +99,11 @@ const DropdownUser = () => {
           dropdownOpen === true ? "block" : "hidden"
         }`}
       >
-        <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
+        <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark mt-4">
           <li>
             <Link
               href="/profile"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out  hover:text-blue-600 lg:text-base"
             >
               <svg
                 className="fill-current"
@@ -113,7 +128,7 @@ const DropdownUser = () => {
           <li>
             <Link
               href="#"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out  hover:text-blue-600 lg:text-base"
             >
               <svg
                 className="fill-current"
@@ -134,7 +149,7 @@ const DropdownUser = () => {
           <li>
             <Link
               href="/pages/settings"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-blue-600 lg:text-base"
             >
               <svg
                 className="fill-current"
@@ -157,7 +172,10 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <button
+          onClick={onSignOut}
+          className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out  hover:text-blue-600 lg:text-base"
+        >
           <svg
             className="fill-current"
             width="22"

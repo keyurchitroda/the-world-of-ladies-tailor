@@ -1,7 +1,12 @@
 "use client";
 import { config } from "@/apiConfig/config";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { getAllReadymadeProduct } from "@/redux/slices/readymadeProductSlice";
+import { getAllCategory } from "@/redux/slices/categorySlice";
+import {
+  getAllCustomizeCategory,
+  getAllCustomizeCategoryForAdminSearch,
+  getAllCustomizeProduct,
+} from "@/redux/slices/customizeSlice";
 import { AppDispatch } from "@/redux/store";
 import _ from "lodash";
 import Link from "next/link";
@@ -10,23 +15,93 @@ import { useDispatch, useSelector } from "react-redux";
 
 const List = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector(
-    (state: any) => state.readymadeProductReducer.products
+  const products = useSelector((state: any) => state.customizeReducer.products);
+
+  const categories = useSelector(
+    (state: any) => state.categoryReducer.categories
   );
+
+  const categories1 = useSelector(
+    (state: any) => state.customizeReducer.categories
+  );
+
   useEffect(() => {
-    getReadymadeProductList();
+    getCustomizeProductList();
+    getCategoryList();
   }, [dispatch]);
 
-  const getReadymadeProductList = async () => {
-    await dispatch(getAllReadymadeProduct());
+  const getCategoryList = async () => {
+    await dispatch(getAllCategory());
+  };
+
+  const getCustomizeProductList = async () => {
+    await dispatch(getAllCustomizeProduct());
+  };
+
+  const handleSearchByCategory = async (event: any) => {
+    console.log("event", event?.target.value);
+    await dispatch(getAllCustomizeCategoryForAdminSearch(event?.target.value));
+  };
+
+  const handleSearchByCusomiyeCategort = async (event: any) => {
+    console.log("event", event?.target.value);
+    await dispatch(getAllCustomizeProduct(event?.target.value));
   };
 
   return (
     <>
       <Breadcrumb pageName="Product List" />
       <div className="flex items-end justify-end">
+        <div className="w-80 px-3 mb-6 md:mb-0">
+          <label
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="category"
+          >
+            Category
+          </label>
+          <select
+            id="category"
+            name="category"
+            autoComplete="country"
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white"
+            onChange={handleSearchByCategory}
+          >
+            <option value="" selected>
+              Search Category
+            </option>
+            {categories.map((item: any, index: any) => (
+              <option key={index} value={item._id}>
+                {item.category_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="w-80 px-3 mb-6 md:mb-0">
+          <label
+            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+            htmlFor="category"
+          >
+            Customize Category
+          </label>
+          <select
+            id="category"
+            name="category"
+            autoComplete="country"
+            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white"
+            onChange={handleSearchByCusomiyeCategort}
+          >
+            <option value="" selected>
+              Search Category
+            </option>
+            {categories1.map((item: any, index: any) => (
+              <option key={index} value={item._id}>
+                {item.customize_category_name}
+              </option>
+            ))}
+          </select>
+        </div>
         <Link
-          href="/admin/readymade/add"
+          href="/admin/customize/product/add"
           className=" bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-12 rounded "
         >
           Add
@@ -42,6 +117,9 @@ const List = () => {
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
                   Category
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
+                  Customize Category
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
                   Product Name
@@ -63,12 +141,12 @@ const List = () => {
             <tbody>
               {products.map((packageItem: any, key: any) => (
                 <tr key={key} className="text-left">
-                  <td className="border-b border-[#eee] py-5 px-4 pl-2  xl:pl-11">
+                  <td className="border-b border-[#eee] py-5 px-4 ">
                     <img
                       className=""
-                      src={`${config.ImageUrl}/product/${_.get(
+                      src={`${config.ImageUrl}/customizeproduct/${_.get(
                         packageItem,
-                        "product_image[0]",
+                        "customize_product_image",
                         ""
                       )}`}
                       width={128}
@@ -81,13 +159,31 @@ const List = () => {
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_name}</p>
+                    <p className="text-black ">
+                      {_.get(
+                        packageItem,
+                        "customize_category_id.customize_category_name",
+                        ""
+                      )}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_desc}</p>
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.customize_product_name}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_price}</p>
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.customize_product_desc}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 ">
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.customize_product_price}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
                     <p

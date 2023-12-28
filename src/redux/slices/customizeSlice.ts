@@ -127,7 +127,7 @@ const {
 export default customizeSlice.reducer;
 
 export const getAllCustomizeCategory =
-  (categoryId: string) => async (dispatch: AppDispatch) => {
+  (categoryId?: any) => async (dispatch: AppDispatch) => {
     try {
       await dispatch(setIsLoaderTrue());
       let response: any = await getAllCustomizeCategoryService(categoryId);
@@ -161,7 +161,7 @@ export const netxCategoryStep =
   };
 
 export const getAllCustomizeProduct =
-  (categoryId: string) => async (dispatch: AppDispatch) => {
+  (categoryId?: any) => async (dispatch: AppDispatch) => {
     try {
       await dispatch(setIsLoaderTrue());
       let response: any = await getAllCustomizeProductService(categoryId);
@@ -218,6 +218,25 @@ export const customizeViewDetails =
       await dispatch(customizeViewDetailsSuccess(inputvalue));
       await dispatch(clearSelectedProductSuccess());
     } catch (e: any) {
+      if (e.code === 500) {
+        console.log("error,", e);
+      }
+    }
+  };
+
+export const getAllCustomizeCategoryForAdminSearch =
+  (categoryId?: any) => async (dispatch: AppDispatch) => {
+    try {
+      await dispatch(setIsLoaderTrue());
+      let response: any = await getAllCustomizeCategoryService(categoryId);
+      if (response.success === true) {
+        await dispatch(
+          getAllCustomizeCategorySuccess(_.get(response, "data", []))
+        );
+      }
+      await dispatch(setIsLoaderFalse());
+    } catch (e: any) {
+      await dispatch(setIsLoaderFalse());
       if (e.code === 500) {
         console.log("error,", e);
       }

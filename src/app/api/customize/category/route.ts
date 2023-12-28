@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
 
     const category = await CustomizeCategory.findOne({
       customize_category_name,
+      category_id,
     });
     if (category) {
       return NextResponse.json(

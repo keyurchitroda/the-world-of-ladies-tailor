@@ -81,8 +81,8 @@ export async function POST(request: NextRequest) {
     // console.log("productsID", productsID);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      success_url: `http://localhost:3000/checkout/success`,
-      cancel_url: `http://localhost:3000/checkout/failed`,
+      success_url: `https://tailor05.vercel.app/checkout/success`,
+      cancel_url: `https://tailor05.vercel.app/checkout/failed`,
       line_items: stripeItems,
       mode: "payment",
       client_reference_id: customer.id,

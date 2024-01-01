@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "readymade",
+        required: true,
       },
     ],
     address_id: {
@@ -41,6 +42,5 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Orders =
-  mongoose.models.orders1 || mongoose.model("orders1", orderSchema);
+const Orders = mongoose.models.orders || mongoose.model("orders", orderSchema);
 export default Orders;

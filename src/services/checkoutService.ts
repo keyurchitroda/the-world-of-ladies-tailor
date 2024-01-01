@@ -7,3 +7,7 @@ export const getAllAddressByEmailIdService = (emailid: string) => {
 export const addNewAddressService = (body: any) => {
   return axiosInstance.post(`address`, body);
 };
+
+export const checkoutStripePayment = (body: any) => {
+  return axiosInstance.post(`stripe/checkout`, body);
+};

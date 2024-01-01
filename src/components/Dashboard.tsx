@@ -1,6 +1,27 @@
-import React from "react";
+"use client";
+import { getAllUsers } from "@/services/commonService";
+import { getAllOrderService } from "@/services/orderService";
+import _ from "lodash";
+import React, { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [userCount, setUserCount] = useState(0);
+  const [orderCount, setOrderCount] = useState(0);
+  useEffect(() => {
+    getUserCounts();
+    getOrderCounts();
+  }, []);
+
+  const getUserCounts = async () => {
+    const responseUserCount = await getAllUsers();
+    setUserCount(_.size(responseUserCount.data));
+  };
+
+  const getOrderCounts = async () => {
+    const responseOrderCount = await getAllOrderService();
+    setOrderCount(_.size(responseOrderCount.data));
+  };
+
   return (
     <div className="grid grid-cols-1 gap-4 px-4 mt-8 sm:grid-cols-4 sm:px-8">
       <div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">
@@ -22,7 +43,7 @@ const Dashboard = () => {
         </div>
         <div className="px-4 text-gray-700">
           <h3 className="text-sm tracking-wider">Total Member</h3>
-          <p className="text-3xl">12,768</p>
+          <p className="text-3xl">{userCount}</p>
         </div>
       </div>
       <div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">
@@ -43,8 +64,8 @@ const Dashboard = () => {
           </svg>
         </div>
         <div className="px-4 text-gray-700">
-          <h3 className="text-sm tracking-wider">Total Post</h3>
-          <p className="text-3xl">39,265</p>
+          <h3 className="text-sm tracking-wider">Total Order</h3>
+          <p className="text-3xl">{orderCount}</p>
         </div>
       </div>
       <div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">

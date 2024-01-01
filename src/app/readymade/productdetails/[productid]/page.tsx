@@ -3,6 +3,7 @@
 import { config } from "@/apiConfig/config";
 import { getCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString } from "@/helpers/helper";
+import { checkoutProductValue } from "@/redux/slices/checkoutSlice";
 import {
   AddToCartProduct,
   AddToCartProductWithoutToken,
@@ -71,7 +72,9 @@ const ProductDetail = (props: PropsParams) => {
     }
   };
 
-  const navigateCheckout = () => {
+  const navigateCheckout = async () => {
+    await dispatch(checkoutProductValue([product]));
+
     router.push(`/checkout`);
   };
 

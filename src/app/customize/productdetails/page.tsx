@@ -15,9 +15,11 @@ const CustomizeProductDetails = () => {
   const viewdetails = useSelector(
     (state: any) => state.customizeReducer.viewdetails
   );
+  console.log("viewdetails", viewdetails);
   const [addDetails, setAddDetails] = useState(
     selectedProducts.filter((item: any) => !item.customize_product_image)
   );
+  console.log("addDetails", addDetails);
 
   console.log("viewdetails", viewdetails);
   const viewAllDetails = () => {

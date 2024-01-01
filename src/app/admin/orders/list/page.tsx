@@ -2,7 +2,7 @@
 import { config } from "@/apiConfig/config";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { getAllCategory } from "@/redux/slices/categorySlice";
-import { getAllReadymadeProduct } from "@/redux/slices/readymadeProductSlice";
+import { getAllOrders } from "@/redux/slices/orderSlice";
 import { AppDispatch } from "@/redux/store";
 import _ from "lodash";
 import Link from "next/link";
@@ -10,87 +10,49 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const List = () => {
+  const orders = useSelector((state: any) => state.ordereducer.orders);
+
   const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector(
-    (state: any) => state.readymadeProductReducer.products
-  );
-  const categories = useSelector(
-    (state: any) => state.categoryReducer.categories
-  );
+
   useEffect(() => {
-    getCategoryList();
-    getReadymadeProductList();
+    getOrdersList();
   }, [dispatch]);
 
-  const getCategoryList = async () => {
-    await dispatch(getAllCategory());
-  };
-
-  const getReadymadeProductList = async () => {
-    await dispatch(getAllReadymadeProduct());
-  };
-
-  const handleSearchByCategor = async (event: any) => {
-    console.log("event", event?.target.value);
-    await dispatch(getAllReadymadeProduct(event?.target.value));
+  const getOrdersList = async () => {
+    await dispatch(getAllOrders());
   };
 
   return (
     <>
-      <Breadcrumb pageName="Product List" />
-      <div className="flex items-end justify-end">
-        <div className="w-80 px-3 mb-6 md:mb-0">
-          <label
-            className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-            htmlFor="category"
-          >
-            Category
-          </label>
-          <select
-            id="category"
-            name="category"
-            autoComplete="country"
-            className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white"
-            onChange={handleSearchByCategor}
-          >
-            <option value="" selected>
-              Search Category
-            </option>
-            {categories.map((item: any, index: any) => (
-              <option key={index} value={item._id}>
-                {item.category_name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <Link
-          href="/admin/readymade/add"
-          className=" bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-12 rounded "
-        >
-          Add
-        </Link>
-      </div>
+      <Breadcrumb pageName="Order List" />
       <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default  sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left">
                 <th className="min-w-[220px] py-4 px-4 font-medium text-black  xl:pl-11">
-                  Image
+                  Order Id
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Category
+                  Customer Name
                 </th>
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Product Name
+                  Customer Email
                 </th>
-
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Product Description
+                  Customer Phone
                 </th>
-
                 <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
-                  Product Price
+                  Customer Address
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
+                  Total Amoount
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
+                  Payment Method
+                </th>
+                <th className="min-w-[150px] py-4 px-4 font-medium text-black ">
+                  Payment Status
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black ">
                   Status
@@ -99,40 +61,63 @@ const List = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((packageItem: any, key: any) => (
+              {orders.map((packageItem: any, key: any) => (
                 <tr key={key} className="text-left">
-                  <td className="border-b border-[#eee] py-5 px-4 pl-2  xl:pl-11">
-                    <img
-                      className=""
-                      src={`${config.ImageUrl}/product/${_.get(
-                        packageItem,
-                        "product_image[0]",
-                        ""
-                      )}`}
-                      width={128}
-                      height={128}
-                    />
+                  <td className="border-b border-[#eee] py-5 px-4 ">
+                    <p className="text-black "> {packageItem._id}</p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
                     <p className="text-black ">
-                      {_.get(packageItem, "category_id.category_name", "")}
+                      {" "}
+                      {packageItem.address_id.first_name}{" "}
+                      {packageItem.address_id.last_name}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_name}</p>
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.address_id.email_id}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_desc}</p>
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.address_id.phone}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
-                    <p className="text-black "> {packageItem.product_price}</p>
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.address_id.address1}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 ">
+                    <p className="text-black "> {packageItem.total_amount}</p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 ">
+                    <p className="text-black ">
+                      {" "}
+                      {packageItem.payment_method_type}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] py-5 px-4 ">
+                    <p
+                      className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
+                        packageItem.payment_status === "paid"
+                          ? "text-green-500 bg-green-500"
+                          : "text-red-500 bg-red-500"
+                      }`}
+                    >
+                      {" "}
+                      {packageItem.payment_status}
+                    </p>
                   </td>
                   <td className="border-b border-[#eee] py-5 px-4 ">
                     <p
                       className={`inline-flex rounded-full bg-opacity-10 py-1 px-3 text-sm font-medium ${
                         packageItem.status === true
-                          ? "text-success bg-green-500"
-                          : "text-danger bg-red-500"
+                          ? "text-green-500 bg-green-500"
+                          : "text-red-500 bg-red-500"
                       }`}
                     >
                       {packageItem.status ? "Active" : "InActive"}

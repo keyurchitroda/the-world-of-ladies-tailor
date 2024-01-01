@@ -25,11 +25,13 @@ interface Address {
 interface CheckoutState {
   addresses: Address[];
   selectedAddress: any;
+  checkoutProducts: any[];
 }
 
 const initialState: CheckoutState = {
   addresses: [],
   selectedAddress: {},
+  checkoutProducts: [],
 };
 
 export const checkoutSlice = createSlice({
@@ -45,11 +47,17 @@ export const checkoutSlice = createSlice({
     setSelectAddressSuccess: (state, action: PayloadAction<any>) => {
       state.selectedAddress = action.payload;
     },
+    setCheckoutProductValueSuccess: (state, action: PayloadAction<any>) => {
+      state.checkoutProducts = action.payload;
+    },
   },
 });
 
-const { getAllAddressesByUserIdSuccess, setSelectAddressSuccess } =
-  checkoutSlice.actions;
+const {
+  getAllAddressesByUserIdSuccess,
+  setSelectAddressSuccess,
+  setCheckoutProductValueSuccess,
+} = checkoutSlice.actions;
 export default checkoutSlice.reducer;
 
 export const getAllAddressByEmail =
@@ -90,6 +98,17 @@ export const selectAddress =
   (address: any) => async (dispatch: AppDispatch) => {
     try {
       await dispatch(setSelectAddressSuccess(address));
+    } catch (e: any) {
+      if (e.code === 500) {
+        console.log("error,", e);
+      }
+    }
+  };
+
+export const checkoutProductValue =
+  (products: any[]) => async (dispatch: AppDispatch) => {
+    try {
+      await dispatch(setCheckoutProductValueSuccess(products));
     } catch (e: any) {
       if (e.code === 500) {
         console.log("error,", e);

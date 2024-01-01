@@ -18,6 +18,7 @@ import readymadeProductReducer from "./slices/readymadeProductSlice";
 import customizeReducer from "./slices/customizeSlice";
 import commonReducer from "./slices/commonSlice";
 import checkoutReducer from "./slices/checkoutSlice";
+import ordereducer from "./slices/orderSlice";
 
 // Define a logout action
 export const logout = createAction("LOGOUT");
@@ -33,6 +34,7 @@ const reducers = combineReducers({
   customizeReducer,
   commonReducer,
   checkoutReducer,
+  ordereducer,
 });
 
 const persistConfig = {
@@ -45,6 +47,7 @@ const persistConfig = {
     "customizeReducer",
     "commonReducer",
     "checkoutReducer",
+    "ordereducer",
   ],
 };
 

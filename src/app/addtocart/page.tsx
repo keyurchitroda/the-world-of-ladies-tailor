@@ -3,6 +3,7 @@
 import { config } from "@/apiConfig/config";
 import { getCookie } from "@/apiConfig/cookies";
 import { defaultAuthTokenString } from "@/helpers/helper";
+import { checkoutProductValue } from "@/redux/slices/checkoutSlice";
 import { setAddToCartValue } from "@/redux/slices/commonSlice";
 import {
   deleteCartProducts,
@@ -11,10 +12,12 @@ import {
 } from "@/redux/slices/readymadeProductSlice";
 import _ from "lodash";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const AddToCart = () => {
+  const route = useRouter();
   const isAddToCartOpen = useSelector(
     (state: any) => state.commonReducer.isAddToCartOpen
   );
@@ -33,6 +36,8 @@ const AddToCart = () => {
 
   const dispatch = useDispatch<any>();
 
+  console.log("addtocartproducts", addtocartproducts);
+
   useEffect(() => {
     if (isAddToCartOpen) {
       dispatch(getAllCartProducts());
@@ -41,6 +46,17 @@ const AddToCart = () => {
 
   const handleCloseCart = async () => {
     await dispatch(setAddToCartValue(false));
+  };
+
+  const handleCheckout = async () => {
+    const token = getCookie(defaultAuthTokenString);
+    await dispatch(
+      checkoutProductValue(
+        token ? products.map((prod: any) => prod.product_id) : addtocartproducts
+      )
+    );
+    await dispatch(setAddToCartValue(false));
+    route.push("/checkout");
   };
 
   const totalCartPrice = () => {
@@ -205,6 +221,18 @@ const AddToCart = () => {
       </>
     );
   };
+
+  const btnDisable = () => {
+    const token = getCookie(defaultAuthTokenString);
+    let isDisable = false;
+    if (token) {
+      isDisable = _.size(products) === 0;
+    } else {
+      isDisable = _.size(addtocartproducts) === 0;
+    }
+    return isDisable;
+  };
+
   return (
     <>
       {isAddToCartOpen && (
@@ -267,12 +295,15 @@ const AddToCart = () => {
                         Shipping and taxes calculated at checkout.
                       </p>
                       <div className="mt-6">
-                        <Link
-                          href="/checkout"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                        <button
+                          onClick={handleCheckout}
+                          className={`${
+                            btnDisable() && "opacity-40 cursor-not-allowed"
+                          } w-full flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700`}
+                          disabled={btnDisable()}
                         >
                           Checkout
-                        </Link>
+                        </button>
                       </div>
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <p>

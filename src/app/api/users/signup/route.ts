@@ -4,6 +4,18 @@ import { NextRequest, NextResponse } from "next/server";
 import bcryptJS from "bcryptjs";
 connect();
 
+export async function GET() {
+  try {
+    const users = await User.findOne();
+    return NextResponse.json(
+      { message: "User created successfully", success: true, data: users },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();

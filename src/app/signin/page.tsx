@@ -67,7 +67,7 @@ const Signin = () => {
     } catch (error: any) {
       console.log("error", error);
       setLoader(false);
-      toast.error(error.message.error);
+      toast.error(error.message.message);
     }
   };
 

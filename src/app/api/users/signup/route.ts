@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     if (user) {
       return NextResponse.json(
-        { error: "User already exists" },
+        { message: "User already exists", success: false, data: null },
         { status: 400 }
       );
     }
@@ -46,6 +46,9 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { message: error.message, success: false, data: null },
+      { status: 500 }
+    );
   }
 }

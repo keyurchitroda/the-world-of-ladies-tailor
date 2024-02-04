@@ -112,7 +112,7 @@ const Readymade = (props: PropsParams) => {
                 <div className="w-72 h-fit group">
                   <div className="relative overflow-hidden">
                     <img
-                      className="h-96 w-full object-cover"
+                      className="h-52 w-full object-cover"
                       src={`${config.ImageUrl}/product/${_.get(
                         product,
                         "product_image[0]",
@@ -135,14 +135,11 @@ const Readymade = (props: PropsParams) => {
                       </button>
                     </div>
                   </div>
-                  <h2 className="mt-3 text-xl capitalize">
+                  <h2 className="mt-3 text-xl font-bold capitalize">
                     {_.get(product, "product_name", "")}
                   </h2>
-                  <del className="text-red-700 text-lg">
-                    {_.get(product, "product_price", "")}
-                  </del>
-                  <p className="text-xl mt-2 ml-1 inline-block">
-                    {_.get(product, "product_price", "")}
+                  <p className="text-xl text-red-400 mt-2 ml-1 inline-block">
+                    Rs. {_.get(product, "product_price", "")}
                   </p>
                 </div>
               </section>

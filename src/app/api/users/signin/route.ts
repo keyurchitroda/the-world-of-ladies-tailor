@@ -14,14 +14,21 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "User does not exists" },
+        {
+          message: "User does not exists",
+          success: false,
+          data: null,
+        },
         { status: 400 }
       );
     }
 
     const validatePassword = await bcryptJS.compare(password, user.password);
     if (!validatePassword) {
-      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Invalid password", success: false, data: null },
+        { status: 400 }
+      );
     }
 
     const tokenData = {

@@ -69,7 +69,7 @@ const Signup = () => {
       }
     } catch (error: any) {
       setLoader(false);
-      toast.error(error.message.error);
+      toast.error(error.message.message);
     }
   };
 

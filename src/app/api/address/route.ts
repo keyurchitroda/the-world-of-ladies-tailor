@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       const addresses = await Address.find({ email_id: decodeToken.email });
       return NextResponse.json(
         {
-          message: "Address fetched successfully",
+          message: "Address fetched successfully..",
           success: true,
           data: addresses,
         },
